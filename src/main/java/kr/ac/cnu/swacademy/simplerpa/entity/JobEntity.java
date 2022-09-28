@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -53,5 +54,14 @@ public class JobEntity {
     public void setActivation(Boolean activation) {
         this.activation = activation;
         this.jobListEntity.setUpdateAt(LocalDateTime.now());
+    }
+
+    public void setJobListEntity(JobListEntity jobListEntity) {
+        if (Objects.nonNull(this.jobListEntity)) {
+            this.jobListEntity.getJobEntityList().remove(this);
+        }
+
+        this.jobListEntity = jobListEntity;
+        jobListEntity.getJobEntityList().add(this);
     }
 }
