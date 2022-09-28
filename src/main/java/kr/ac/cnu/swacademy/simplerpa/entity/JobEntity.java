@@ -40,11 +40,6 @@ public class JobEntity {
         this.activation = activation;
     }
 
-    public void setJobListEntity(JobListEntity jobListEntity) {
-        this.jobListEntity = jobListEntity;
-        this.jobListEntity.setUpdateAt(LocalDateTime.now());
-    }
-
     public void setCommand(String command) {
         this.command = command;
         this.jobListEntity.setUpdateAt(LocalDateTime.now());
