@@ -3,6 +3,7 @@ package kr.ac.cnu.swacademy.simplerpa.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,8 +31,8 @@ public class JobListEntity extends BaseTimeEntity{
     @JoinColumn(name = "robot_id")
     private RobotEntity robotEntity;
 
-    @NotNull
-    private Boolean repeat;
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean isRepeat;
 
     private LocalDateTime excutedDatetime;
 
@@ -41,7 +42,7 @@ public class JobListEntity extends BaseTimeEntity{
     @Builder
     public JobListEntity(String name, Boolean repeat,RobotEntity robotEntity, LocalDateTime excuted_datetime) {
         this.name = name;
-        this.repeat = repeat;
+        this.isRepeat = repeat;
         this.robotEntity = robotEntity;
         this.excutedDatetime = excuted_datetime;
     }
@@ -62,7 +63,7 @@ public class JobListEntity extends BaseTimeEntity{
     }
 
     public void setRepeat(Boolean repeat) {
-        this.repeat = repeat;
+        this.isRepeat = repeat;
         this.setUpdateAt(LocalDateTime.now());
     }
 
