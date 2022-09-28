@@ -1,15 +1,20 @@
 package kr.ac.cnu.swacademy.simplerpa.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
 @Table(name = "job_lists")
+@Getter
 public class JobListEntity extends BaseTimeEntity{
 
     @Id
@@ -30,6 +35,9 @@ public class JobListEntity extends BaseTimeEntity{
 
     private LocalDateTime excutedDatetime;
 
+    @OneToMany(mappedBy = "jobListEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JobEntity> jobEntityList = new ArrayList<>();
+
     @Builder
     public JobListEntity(String name, Boolean repeat,RobotEntity robotEntity, LocalDateTime excuted_datetime) {
         this.name = name;
@@ -44,7 +52,12 @@ public class JobListEntity extends BaseTimeEntity{
     }
 
     public void setRobotEntity(RobotEntity robotEntity) {
+        if (Objects.nonNull(this.robotEntity)) {
+            this.robotEntity.getJobListEntities().remove(this);
+        }
+
         this.robotEntity = robotEntity;
+        robotEntity.getJobListEntities().add(this);
         this.setUpdateAt(LocalDateTime.now());
     }
 
@@ -56,5 +69,9 @@ public class JobListEntity extends BaseTimeEntity{
     public void setExcutedDatetime(LocalDateTime excutedDatetime) {
         this.excutedDatetime = excutedDatetime;
         this.setUpdateAt(LocalDateTime.now());
+    }
+
+    public void addJobEntity(JobEntity jobEntity) {
+        jobEntity.setJobListEntity(this);
     }
 }

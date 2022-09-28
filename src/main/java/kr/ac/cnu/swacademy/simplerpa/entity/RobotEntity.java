@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -29,6 +31,9 @@ public class RobotEntity extends BaseTimeEntity {
     @Column(length = 30)
     private String password;
 
+    @OneToMany(mappedBy = "robotEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JobListEntity> jobListEntities = new ArrayList<>();
+
 
     @Builder
     public RobotEntity(String address, String user, String password) {
@@ -50,5 +55,9 @@ public class RobotEntity extends BaseTimeEntity {
     public void setPassword(String password) {
         this.password = password;
         this.setUpdateAt(LocalDateTime.now());
+    }
+
+    public void addJobListEntity(JobListEntity jobListEntity) {
+        jobListEntity.setRobotEntity(this);
     }
 }
