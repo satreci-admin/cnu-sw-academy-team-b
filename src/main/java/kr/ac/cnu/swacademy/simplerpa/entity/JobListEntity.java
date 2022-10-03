@@ -3,7 +3,6 @@ package kr.ac.cnu.swacademy.simplerpa.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -64,6 +63,7 @@ public class JobListEntity extends BaseTimeEntity{
 
     public void setIsRepeat(Boolean isRepeat) {
         this.isRepeat = isRepeat;
+        if(Boolean.FALSE.equals(isRepeat)) this.excutedDatetime = null;
         this.setUpdateAt(LocalDateTime.now());
     }
 
