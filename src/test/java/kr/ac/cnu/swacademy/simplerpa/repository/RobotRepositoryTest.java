@@ -73,4 +73,25 @@ class RobotRepositoryTest {
         assertThat(all).contains(saved1);
         assertThat(all).contains(saved2);
     }
+
+    @Test
+    @Transactional
+    void 로봇을_하나_조회한다() {
+        // given
+        RobotEntity newRobotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1")
+                .user("root")
+                .password("1234")
+                .build();
+
+        RobotEntity saved = robotRepository.save(newRobotEntity1);
+
+        // when
+        Optional<RobotEntity> foundRobot = robotRepository.findById(saved.getId());
+
+        // then
+        assertThat(foundRobot).isPresent();
+        assertThat(foundRobot.get()).isEqualTo(saved);
+    }
+
 }
