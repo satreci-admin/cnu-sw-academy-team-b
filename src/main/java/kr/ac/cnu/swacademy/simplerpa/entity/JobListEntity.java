@@ -52,12 +52,7 @@ public class JobListEntity extends BaseTimeEntity{
     }
 
     public void setRobotEntity(RobotEntity robotEntity) {
-        if (Objects.nonNull(this.robotEntity)) {
-            this.robotEntity.getJobListEntities().remove(this);
-        }
-
         this.robotEntity = robotEntity;
-        robotEntity.getJobListEntities().add(this);
         this.setUpdateAt(LocalDateTime.now());
     }
 
