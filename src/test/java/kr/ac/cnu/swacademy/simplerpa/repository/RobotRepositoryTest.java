@@ -116,4 +116,24 @@ class RobotRepositoryTest {
         assertThat(foundRobot.get().getAddress()).isEqualTo(saved.getAddress());
     }
 
+    @Test
+    @Transactional
+    void 로봇을_삭제한다() {
+        // given
+        RobotEntity newRobotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1")
+                .user("root")
+                .password("1234")
+                .build();
+
+        RobotEntity saved = robotRepository.save(newRobotEntity1);
+
+        // when
+        robotRepository.deleteById(saved.getId());
+
+        // then
+        List<RobotEntity> all = robotRepository.findAll();
+        assertThat(all).hasSize(0);
+        assertThat(all).isEmpty();
+    }
 }
