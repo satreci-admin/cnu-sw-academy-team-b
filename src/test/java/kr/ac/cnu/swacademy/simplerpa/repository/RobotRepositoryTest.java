@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -20,14 +22,7 @@ class RobotRepositoryTest {
     private RobotRepository robotRepository;
 
     @BeforeEach
-    void setup() {
-        RobotEntity robotEntity = RobotEntity.builder()
-                .address("127.0.0.1")
-                .user("root")
-                .password("1234")
-                .build();
-        robotRepository.save(robotEntity);
-    }
+    void setup() {}
 
     @AfterEach
     void cleanUp() {
@@ -36,7 +31,7 @@ class RobotRepositoryTest {
 
     @Test
     @Transactional
-    void 로봇을_테이블에_저장한다() {
+    void 로봇을_저장한다() {
         // given
         RobotEntity newRobotEntity = RobotEntity.builder()
                 .address("127.0.0.1")
@@ -49,7 +44,33 @@ class RobotRepositoryTest {
 
         // then
         Optional<RobotEntity> foundById = robotRepository.findById(saved.getId());
-        Assertions.assertThat(foundById).isPresent();
-        Assertions.assertThat(foundById.get()).isEqualTo(saved);
+        assertThat(foundById).isPresent();
+        assertThat(foundById.get()).isEqualTo(saved);
+    }
+
+    @Test
+    @Transactional
+    void 로봇을_모두_조회한다() {
+        // given
+        RobotEntity newRobotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1")
+                .user("root")
+                .password("1234")
+                .build();
+        RobotEntity newRobotEntity2 = RobotEntity.builder()
+                .address("127.0.0.1")
+                .user("root")
+                .password("1234")
+                .build();
+        // when
+        RobotEntity saved1 = robotRepository.save(newRobotEntity1);
+        RobotEntity saved2 = robotRepository.save(newRobotEntity2);
+
+        List<RobotEntity> all = robotRepository.findAll();
+
+        // then
+        assertThat(all).hasSize(2);
+        assertThat(all).contains(saved1);
+        assertThat(all).contains(saved2);
     }
 }
