@@ -6,7 +6,7 @@ spring:
     password: 1234
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
@@ -16,3 +16,4 @@ spring:
         default_batch_fetch_size: 100
     database: mysql
     show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
