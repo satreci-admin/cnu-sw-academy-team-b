@@ -58,7 +58,7 @@ public class JobListEntity extends BaseTimeEntity{
 
     public void setIsRepeat(Boolean isRepeat) {
         this.isRepeat = isRepeat;
-        if(Boolean.FALSE.equals(isRepeat)) this.excutedDatetime = null;
+        if(Objects.isNull(isRepeat) || Boolean.FALSE.equals(isRepeat)) this.excutedDatetime = null;
         this.setUpdateAt(LocalDateTime.now());
     }
 
