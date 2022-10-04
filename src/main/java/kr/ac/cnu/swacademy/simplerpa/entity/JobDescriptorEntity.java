@@ -13,12 +13,12 @@ import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "job_lists")
+@Table(name = "job_descriptors")
 @Getter
-public class JobListEntity extends BaseTimeEntity{
+public class JobDescriptorEntity extends BaseTimeEntity{
 
     @Id
-    @Column(name = "joblist_id")
+    @Column(name = "jobdescriptor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,11 +35,11 @@ public class JobListEntity extends BaseTimeEntity{
 
     private LocalDateTime excutedDatetime;
 
-    @OneToMany(mappedBy = "jobListEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "jobDescriptorEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JobEntity> jobEntityList = new ArrayList<>();
 
     @Builder
-    public JobListEntity(String name, Boolean isRepeat, RobotEntity robotEntity, LocalDateTime excuted_datetime) {
+    public JobDescriptorEntity(String name, Boolean isRepeat, RobotEntity robotEntity, LocalDateTime excuted_datetime) {
         this.name = name;
         this.isRepeat = isRepeat;
         this.robotEntity = robotEntity;
@@ -68,6 +68,6 @@ public class JobListEntity extends BaseTimeEntity{
     }
 
     public void addJobEntity(JobEntity jobEntity) {
-        jobEntity.setJobListEntity(this);
+        jobEntity.setJobDescriptorEntity(this);
     }
 }
