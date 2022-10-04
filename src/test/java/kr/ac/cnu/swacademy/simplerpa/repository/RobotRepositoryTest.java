@@ -94,4 +94,26 @@ class RobotRepositoryTest {
         assertThat(foundRobot.get()).isEqualTo(saved);
     }
 
+    @Test
+    @Transactional
+    void 로봇을_수정한다() {
+        // given
+        RobotEntity newRobotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1")
+                .user("root")
+                .password("1234")
+                .build();
+
+        RobotEntity saved = robotRepository.save(newRobotEntity1);
+
+        // when
+        saved.setUser("192.168.56.1");
+        Optional<RobotEntity> foundRobot = robotRepository.findById(saved.getId());
+
+        // then
+        assertThat(foundRobot).isPresent();
+        assertThat(foundRobot.get().getId()).isEqualTo(saved.getId());
+        assertThat(foundRobot.get().getAddress()).isEqualTo(saved.getAddress());
+    }
+
 }
