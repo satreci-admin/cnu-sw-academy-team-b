@@ -33,17 +33,17 @@ public class JobDescriptorEntity extends BaseTimeEntity{
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean isRepeat;
 
-    private LocalDateTime excutedDatetime;
+    private LocalDateTime executedDatetime;
 
     @OneToMany(mappedBy = "jobDescriptorEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JobEntity> jobEntityList = new ArrayList<>();
 
     @Builder
-    public JobDescriptorEntity(String name, Boolean isRepeat, RobotEntity robotEntity, LocalDateTime excuted_datetime) {
+    public JobDescriptorEntity(String name, Boolean isRepeat, RobotEntity robotEntity, LocalDateTime executedDatetime) {
         this.name = name;
         this.isRepeat = isRepeat;
         this.robotEntity = robotEntity;
-        this.excutedDatetime = excuted_datetime;
+        this.executedDatetime = executedDatetime;
     }
 
     public void setName(String name) {
@@ -58,12 +58,12 @@ public class JobDescriptorEntity extends BaseTimeEntity{
 
     public void setIsRepeat(Boolean isRepeat) {
         this.isRepeat = isRepeat;
-        if(Objects.isNull(isRepeat) || Boolean.FALSE.equals(isRepeat)) this.excutedDatetime = null;
+        if(Objects.isNull(isRepeat) || Boolean.FALSE.equals(isRepeat)) this.executedDatetime = null;
         this.setUpdateAt(LocalDateTime.now());
     }
 
-    public void setExcutedDatetime(LocalDateTime excutedDatetime) {
-        this.excutedDatetime = excutedDatetime;
+    public void setExecutedDatetime(LocalDateTime executedDatetime) {
+        this.executedDatetime = executedDatetime;
         this.setUpdateAt(LocalDateTime.now());
     }
 

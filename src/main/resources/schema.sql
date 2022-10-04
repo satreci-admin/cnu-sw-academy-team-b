@@ -19,7 +19,7 @@ CREATE TABLE job_descriptors
     name        VARCHAR(30)  NOT NULL,
     robot_id      bigint NOT NULL,
     repeat     TINYINT NOT NULL,
-    excuted_datetime timestamp(6)  DEFAULT NULL,
+    executed_datetime timestamp(6)  DEFAULT NULL,
     created_at   timestamp(6)  NOT NULL,
     updated_at   timestamp(6) DEFAULT NULL,
 
