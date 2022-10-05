@@ -31,7 +31,7 @@ public class JobListEntity extends BaseTimeEntity{
     @JoinColumn(name = "robot_id")
     private RobotEntity robotEntity;
 
-    @Column(columnDefinition = "TINYINT(1)")
+    @NotNull
     private Boolean isRepeat;
 
     private LocalDateTime excutedDatetime;
@@ -40,9 +40,9 @@ public class JobListEntity extends BaseTimeEntity{
     List<JobEntity> jobEntityList = new ArrayList<>();
 
     @Builder
-    public JobListEntity(String name, Boolean repeat,RobotEntity robotEntity, LocalDateTime excuted_datetime) {
+    public JobListEntity(String name, Boolean isRepeat,RobotEntity robotEntity, LocalDateTime excuted_datetime) {
         this.name = name;
-        this.isRepeat = repeat;
+        this.isRepeat = isRepeat;
         this.robotEntity = robotEntity;
         this.excutedDatetime = excuted_datetime;
     }
@@ -62,8 +62,8 @@ public class JobListEntity extends BaseTimeEntity{
         this.setUpdateAt(LocalDateTime.now());
     }
 
-    public void setRepeat(Boolean repeat) {
-        this.isRepeat = repeat;
+    public void setRepeat(Boolean isRepeat) {
+        this.isRepeat = isRepeat;
         this.setUpdateAt(LocalDateTime.now());
     }
 
