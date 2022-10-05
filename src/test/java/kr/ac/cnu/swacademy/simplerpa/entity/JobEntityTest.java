@@ -1,6 +1,6 @@
 package kr.ac.cnu.swacademy.simplerpa.entity;
 
-import kr.ac.cnu.swacademy.simplerpa.repository.JobListRepository;
+import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +22,10 @@ class JobEntityTest {
     JobRepository jobRepository;
 
     @Autowired
-    JobListRepository jobListRepository;
+    JobDescriptorRepository jobDescriptorRepository;
 
     private JobEntity jobEntity;
-    private JobListEntity jobListEntity;
-    private RobotEntity robotEntity;
+    private JobDescriptorEntity jobDescriptorEntity;
 
     @BeforeEach
     void beforeEach() {
@@ -65,7 +63,7 @@ class JobEntityTest {
         JobEntity jobEntity = JobEntity.builder()
                 .command("ls")
                 .parameter("-al")
-                .jobListEntity(jobListEntity)
+                .jobDescriptorEntity(jobDescriptorEntity)
                 .activation(Boolean.FALSE)
                 .build();
 
@@ -85,14 +83,14 @@ class JobEntityTest {
         JobEntity jobEntity1 = JobEntity.builder()
                 .command("ls")
                 .parameter("-al")
-                .jobListEntity(jobListEntity)
+                .jobDescriptorEntity(jobDescriptorEntity)
                 .activation(Boolean.FALSE)
                 .build();
 
         JobEntity jobEntity2 = JobEntity.builder()
                 .command("cp")
                 .parameter("-r")
-                .jobListEntity(jobListEntity)
+                .jobDescriptorEntity(jobDescriptorEntity)
                 .activation(Boolean.FALSE)
                 .build();
 
@@ -113,19 +111,19 @@ class JobEntityTest {
     @Transactional
     void update() {
 
-        JobListEntity jobListEntity1 = JobListEntity.builder()
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
                 .name("hello")
-                .repeat(Boolean.FALSE)
+                .isRepeat(Boolean.FALSE)
                 .build();
 
         JobEntity jobEntity = JobEntity.builder()
                 .command("ls")
                 .parameter("-al")
-                .jobListEntity(jobListEntity1)
+                .jobDescriptorEntity(jobDescriptorEntity)
                 .activation(Boolean.FALSE)
                 .build();
 
-        jobListRepository.save(jobListEntity1);
+        jobDescriptorRepository.save(jobDescriptorEntity);
         JobEntity savedJobEntity = jobRepository.save(jobEntity);
 
 
@@ -147,7 +145,7 @@ class JobEntityTest {
         JobEntity jobEntity = JobEntity.builder()
                 .command("ls")
                 .parameter("-al")
-                .jobListEntity(jobListEntity)
+                .jobDescriptorEntity(jobDescriptorEntity)
                 .activation(Boolean.FALSE)
                 .build();
 
