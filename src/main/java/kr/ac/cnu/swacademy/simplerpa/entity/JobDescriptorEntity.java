@@ -30,7 +30,7 @@ public class JobDescriptorEntity extends BaseTimeEntity{
     @JoinColumn(name = "robot_id")
     private RobotEntity robotEntity;
 
-    @Column(columnDefinition = "TINYINT(1)")
+    @NotNull
     private Boolean isRepeat;
 
     private LocalDateTime executedDatetime;
