@@ -31,10 +31,6 @@ public class RobotEntity extends BaseTimeEntity {
     @Column(length = 30)
     private String password;
 
-    @OneToMany(mappedBy = "robotEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JobListEntity> jobListEntities = new ArrayList<>();
-
-
     @Builder
     public RobotEntity(String address, String user, String password) {
         this.address = address;
@@ -55,9 +51,5 @@ public class RobotEntity extends BaseTimeEntity {
     public void setPassword(String password) {
         this.password = password;
         this.setUpdateAt(LocalDateTime.now());
-    }
-
-    public void addJobListEntity(JobListEntity jobListEntity) {
-        jobListEntity.setRobotEntity(this);
     }
 }

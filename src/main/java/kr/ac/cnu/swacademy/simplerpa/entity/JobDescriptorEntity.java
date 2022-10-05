@@ -3,7 +3,6 @@ package kr.ac.cnu.swacademy.simplerpa.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,12 +13,12 @@ import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "job_lists")
+@Table(name = "job_descriptors")
 @Getter
-public class JobListEntity extends BaseTimeEntity{
+public class JobDescriptorEntity extends BaseTimeEntity{
 
     @Id
-    @Column(name = "joblist_id")
+    @Column(name = "jobdescriptor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,17 +33,17 @@ public class JobListEntity extends BaseTimeEntity{
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean isRepeat;
 
-    private LocalDateTime excutedDatetime;
+    private LocalDateTime executedDatetime;
 
-    @OneToMany(mappedBy = "jobListEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "jobDescriptorEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JobEntity> jobEntityList = new ArrayList<>();
 
     @Builder
-    public JobListEntity(String name, Boolean repeat,RobotEntity robotEntity, LocalDateTime excuted_datetime) {
+    public JobDescriptorEntity(String name, Boolean isRepeat, RobotEntity robotEntity, LocalDateTime executedDatetime) {
         this.name = name;
-        this.isRepeat = repeat;
+        this.isRepeat = isRepeat;
         this.robotEntity = robotEntity;
-        this.excutedDatetime = excuted_datetime;
+        this.executedDatetime = executedDatetime;
     }
 
     public void setName(String name) {
@@ -53,26 +52,22 @@ public class JobListEntity extends BaseTimeEntity{
     }
 
     public void setRobotEntity(RobotEntity robotEntity) {
-        if (Objects.nonNull(this.robotEntity)) {
-            this.robotEntity.getJobListEntities().remove(this);
-        }
-
         this.robotEntity = robotEntity;
-        robotEntity.getJobListEntities().add(this);
         this.setUpdateAt(LocalDateTime.now());
     }
 
-    public void setRepeat(Boolean repeat) {
-        this.isRepeat = repeat;
+    public void setIsRepeat(Boolean isRepeat) {
+        this.isRepeat = isRepeat;
+        if(Boolean.FALSE.equals(isRepeat)) this.executedDatetime = null;
         this.setUpdateAt(LocalDateTime.now());
     }
 
-    public void setExcutedDatetime(LocalDateTime excutedDatetime) {
-        this.excutedDatetime = excutedDatetime;
+    public void setExecutedDatetime(LocalDateTime executedDatetime) {
+        this.executedDatetime = executedDatetime;
         this.setUpdateAt(LocalDateTime.now());
     }
 
     public void addJobEntity(JobEntity jobEntity) {
-        jobEntity.setJobListEntity(this);
+        jobEntity.setJobDescriptorEntity(this);
     }
 }

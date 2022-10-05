@@ -21,8 +21,8 @@ public class JobEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "joblist_id")
-    private JobListEntity jobListEntity;
+    @JoinColumn(name = "jobdescriptor_id")
+    private JobDescriptorEntity jobDescriptorEntity;
 
     @NotNull
     @Column(length = 30)
@@ -34,8 +34,8 @@ public class JobEntity {
     private Boolean activation;
 
     @Builder
-    public JobEntity(JobListEntity jobListEntity, String command, String parameter, Boolean activation) {
-        this.jobListEntity = jobListEntity;
+    public JobEntity(JobDescriptorEntity jobDescriptorEntity, String command, String parameter, Boolean activation) {
+        this.jobDescriptorEntity = jobDescriptorEntity;
         this.command = command;
         this.parameter = parameter;
         this.activation = activation;
@@ -43,25 +43,25 @@ public class JobEntity {
 
     public void setCommand(String command) {
         this.command = command;
-        this.jobListEntity.setUpdateAt(LocalDateTime.now());
+        this.jobDescriptorEntity.setUpdateAt(LocalDateTime.now());
     }
 
     public void setParameter(String parameter) {
         this.parameter = parameter;
-        this.jobListEntity.setUpdateAt(LocalDateTime.now());
+        this.jobDescriptorEntity.setUpdateAt(LocalDateTime.now());
     }
 
     public void setActivation(Boolean activation) {
         this.activation = activation;
-        this.jobListEntity.setUpdateAt(LocalDateTime.now());
+        this.jobDescriptorEntity.setUpdateAt(LocalDateTime.now());
     }
 
-    public void setJobListEntity(JobListEntity jobListEntity) {
-        if (Objects.nonNull(this.jobListEntity)) {
-            this.jobListEntity.getJobEntityList().remove(this);
+    public void setJobDescriptorEntity(JobDescriptorEntity jobDescriptorEntity) {
+        if (Objects.nonNull(this.jobDescriptorEntity)) {
+            this.jobDescriptorEntity.getJobEntityList().remove(this);
         }
 
-        this.jobListEntity = jobListEntity;
-        jobListEntity.getJobEntityList().add(this);
+        this.jobDescriptorEntity = jobDescriptorEntity;
+        jobDescriptorEntity.getJobEntityList().add(this);
     }
 }
