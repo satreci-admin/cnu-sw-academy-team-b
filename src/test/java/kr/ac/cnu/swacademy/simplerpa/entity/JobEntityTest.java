@@ -20,7 +20,6 @@ class JobEntityTest {
 
     @Autowired
     JobRepository jobRepository;
-
     @Autowired
     JobDescriptorRepository jobDescriptorRepository;
 
