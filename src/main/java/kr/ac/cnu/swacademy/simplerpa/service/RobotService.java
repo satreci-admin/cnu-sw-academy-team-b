@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,5 +20,13 @@ public class RobotService {
     @Transactional
     public Long save(RobotSaveRequestDto requestDto) {
         return robotRepository.save(requestDto.toEntity()).getId();
+    }
+
+    @Transactional
+    public List<RobotListResponseDto> findAll() {
+        return robotRepository
+                .findAll()
+                .stream()
+                .map(RobotListResponseDto::new).collect(Collectors.toList());
     }
 }
