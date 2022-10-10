@@ -1,6 +1,7 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.RobotResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,5 +74,26 @@ class RobotServiceTest {
         assertThat(all.get(1))
                 .usingRecursiveComparison()
                 .isEqualTo(new RobotListResponseDto(robot2));
+    }
+
+    @Test
+    void 로봇을_단건조회한다() {
+        // given
+        RobotEntity robot1 = RobotEntity
+                .builder()
+                .address("100.100.100.100:100")
+                .user("hi")
+                .password("bye")
+                .build();
+        given(robotRepository.findById(any(Long.class))).willReturn(Optional.of(robot1));
+
+        // when
+        RobotResponseDto responseDto = robotService.findById(1L);
+
+        // then
+        then(robotRepository).should().findById(1L);
+        assertThat(new RobotResponseDto(robot1))
+                .usingRecursiveComparison()
+                .isEqualTo(responseDto);
     }
 }
