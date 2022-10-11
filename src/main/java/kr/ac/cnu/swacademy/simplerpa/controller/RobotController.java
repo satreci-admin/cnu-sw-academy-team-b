@@ -36,13 +36,14 @@ public class RobotController {
     }
 
     @GetMapping("/robot")
-    public String RobotSaveForm () {
+    public String RobotSaveForm (Model model) {
+        model.addAttribute("robot", new RobotSaveRequestDto());
         return "robot/saveForm";
     }
 
     @PostMapping("/robot")
     public String saveRobot (@ModelAttribute RobotSaveRequestDto requestDto) {
         Long saveId = robotService.save(requestDto);
-        return "robots";
+        return "redirect:/robots";
     }
 }
