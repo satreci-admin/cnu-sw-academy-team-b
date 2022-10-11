@@ -2,7 +2,12 @@ package kr.ac.cnu.swacademy.simplerpa.dto;
 
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter @Setter
 public class RobotSaveRequestDto {
     private String address;
     private String user;
