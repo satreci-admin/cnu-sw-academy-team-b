@@ -3,15 +3,16 @@ package kr.ac.cnu.swacademy.simplerpa.controller;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.RobotUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.service.RobotService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,5 +46,14 @@ public class RobotController {
     public String saveRobot (@ModelAttribute RobotSaveRequestDto requestDto) {
         Long saveId = robotService.save(requestDto);
         return "redirect:/robots";
+    }
+
+    @PutMapping("/robot/{robotId}")
+    public String updateRobot (
+            @PathVariable Long robotId,
+            @RequestBody RobotUpdateRequestDto requestDto)
+    {
+        robotService.update(robotId, requestDto);
+        return "robot/robotList";
     }
 }
