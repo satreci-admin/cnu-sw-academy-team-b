@@ -33,7 +33,18 @@ let main = {
     },
 
     delete: function () {
-        console.log("clicked")
+        let id = $("#id").val()
+
+        $.ajax({
+            type: "DELETE",
+            url: '/robots/' + id,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+        }).done(function () {
+            alert("삭제했습니다.")
+        }).fail(function () {
+            alert("실패했습니다.")
+        })
     }
 }
 
