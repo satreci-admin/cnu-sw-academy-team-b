@@ -51,4 +51,10 @@ public class RobotService {
 
         return id;
     }
+
+    @Transactional
+    public Long delete(Long id) {
+        robotRepository.deleteById(id);
+        return id;
+    }
 }
