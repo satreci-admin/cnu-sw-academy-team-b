@@ -3,6 +3,7 @@ package kr.ac.cnu.swacademy.simplerpa.service;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.RobotUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,17 @@ public class RobotService {
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 로봇이 없습니다"));
         return new RobotResponseDto(robotEntity);
+    }
+
+    @Transactional
+    public Long update(Long id, RobotUpdateRequestDto requestDto) {
+        RobotEntity robotEntity = robotRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 로봇이 없습니다."));
+        robotEntity.setAddress(requestDto.getAddress());
+        robotEntity.setUser(requestDto.getUser());
+        robotEntity.setPassword(requestDto.getPassword());
+
+        return id;
     }
 }
