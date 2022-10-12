@@ -56,4 +56,10 @@ public class RobotController {
         robotService.update(robotId, requestDto);
         return "robot/robotList";
     }
+
+    @DeleteMapping("/robots/{robotId}")
+    public String deleteRobot (@PathVariable Long robotId) {
+        robotService.delete(robotId);
+        return "robot/robotList";
+    }
 }
