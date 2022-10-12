@@ -18,12 +18,12 @@ CREATE TABLE job_descriptors
     jobdescriptor_id  bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name        VARCHAR(30)  NOT NULL,
     robot_id      bigint NOT NULL,
-    repeat     TINYINT NOT NULL,
+    is_repeat     TINYINT NOT NULL,
     executed_datetime timestamp(6)  DEFAULT NULL,
     created_at   timestamp(6)  NOT NULL,
     updated_at   timestamp(6) DEFAULT NULL,
 
-    CONSTRAINT fk_job_descriptors_to_robots FOREIGN KEY (robot_id) REFERENCES robots (robot_id) ON DELETE CASCADE,
+    CONSTRAINT fk_job_descriptors_to_robots FOREIGN KEY (robot_id) REFERENCES robots (robot_id) ON DELETE CASCADE
 );
 
 CREATE TABLE jobs
@@ -34,7 +34,7 @@ CREATE TABLE jobs
     parameter   VARCHAR(30) default NULL,
     activation      TINYINT      NOT NULL,
 
-    CONSTRAINT fk_jobs_to_job_descriptors FOREIGN KEY (jobdescriptor_id) REFERENCES job_descriptors (jobdescriptor_id) ON DELETE CASCADE,
+    CONSTRAINT fk_jobs_to_job_descriptors FOREIGN KEY (jobdescriptor_id) REFERENCES job_descriptors (jobdescriptor_id) ON DELETE CASCADE
 );
 
 
