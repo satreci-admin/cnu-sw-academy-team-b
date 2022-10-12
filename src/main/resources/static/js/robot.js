@@ -26,6 +26,7 @@ let main = {
             data: JSON.stringify(data)
         }).done(() => {
             alert("전송되었습니다.")
+            location.href='/robots'
         }).fail((e) => {
             alert("실패하였습니다.")
             console.log(e)
@@ -42,6 +43,7 @@ let main = {
             dataType: 'html',
         }).done(function () {
             alert("삭제했습니다.")
+            location.href = '/robots'
         }).fail(function () {
             alert("실패했습니다.")
         })
