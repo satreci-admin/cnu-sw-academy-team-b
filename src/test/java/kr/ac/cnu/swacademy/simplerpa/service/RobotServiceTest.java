@@ -3,6 +3,7 @@ package kr.ac.cnu.swacademy.simplerpa.service;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.RobotUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
 import org.assertj.core.api.Assertions;
@@ -95,5 +96,33 @@ class RobotServiceTest {
         assertThat(new RobotResponseDto(robot1))
                 .usingRecursiveComparison()
                 .isEqualTo(responseDto);
+    }
+
+    @Test
+    void 로봇을_수정한다() {
+        // given
+        RobotEntity robot1 = RobotEntity
+                .builder()
+                .address("100.100.100.100:100")
+                .user("hi")
+                .password("bye")
+                .build();
+        given(robotRepository.findById(any(Long.class))).willReturn(Optional.of(robot1));
+
+        RobotUpdateRequestDto requestDto = RobotUpdateRequestDto
+                .builder()
+                .address("200.200.200.200:200")
+                .user("hello")
+                .password("hi")
+                .build();
+
+        // when
+        robotService.update(1L, requestDto);
+
+        // then
+        then(robotRepository).should().findById(any(Long.class));
+        assertThat(robot1.getAddress()).isEqualTo(requestDto.getAddress());
+        assertThat(robot1.getUser()).isEqualTo(requestDto.getUser());
+        assertThat(robot1.getPassword()).isEqualTo(requestDto.getPassword());
     }
 }
