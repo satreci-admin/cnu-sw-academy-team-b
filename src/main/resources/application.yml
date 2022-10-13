@@ -17,6 +17,3 @@ spring:
         default_batch_fetch_size: 100
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-
-# Entity CRUD시, 넘겨준 인자들을 보여주는 옵션
-#logging.level.org.hibernate.type.descriptor.sql: trace

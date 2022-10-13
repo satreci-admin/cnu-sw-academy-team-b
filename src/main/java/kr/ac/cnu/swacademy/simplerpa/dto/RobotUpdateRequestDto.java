@@ -8,23 +8,24 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Getter @Setter
-public class RobotSaveRequestDto {
+public class RobotUpdateRequestDto {
     private String address;
     private String user;
     private String password;
 
     @Builder
-    public RobotSaveRequestDto(String address, String user, String password) {
+    public RobotUpdateRequestDto (String address, String user, String password) {
         this.address = address;
         this.user = user;
         this.password = password;
     }
 
     public RobotEntity toEntity() {
-        return RobotEntity.builder()
-                .address(this.address)
-                .user(this.user)
-                .password(this.password)
+        return RobotEntity
+                .builder()
+                .address(address)
+                .user(user)
+                .password(password)
                 .build();
     }
 }
