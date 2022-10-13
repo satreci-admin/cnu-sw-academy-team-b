@@ -6,12 +6,17 @@ spring:
     password: 1234
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 100
     database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+# Entity CRUD시, 넘겨준 인자들을 보여주는 옵션
+#logging.level.org.hibernate.type.descriptor.sql: trace
