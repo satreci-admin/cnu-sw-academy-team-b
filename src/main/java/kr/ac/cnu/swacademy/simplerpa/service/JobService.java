@@ -43,8 +43,9 @@ public class JobService {
     @Transactional
     public Long create(JobSaveRequestDto jobSaveRequestDto)
     {
-        Optional<JobDescriptorEntity> foundedJobDescriptorEntity = jobDescriptorRepository.findById(jobSaveRequestDto.getJobDescriptionId());
-        JobEntity savedJobEntity = jobRepository.save(jobSaveRequestDto.toEntity(foundedJobDescriptorEntity.get()));
+        JobDescriptorEntity foundedJobDescriptorEntity = jobDescriptorRepository.findById(jobSaveRequestDto.getJobDescriptionId()).orElseThrow(() ->
+                new IllegalArgumentException("해당 작업명세서가 없습니다. id=" + jobSaveRequestDto.getJobDescriptionId()));
+        JobEntity savedJobEntity = jobRepository.save(jobSaveRequestDto.toEntity(foundedJobDescriptorEntity));
         return savedJobEntity.getId();
     }
 
