@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <title>Simple RPA Admin Page</title>
+</head>
+<body class="container-fluid">
+<h2>작업명세서 리스트</h2>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a th:href="@{/jobdescriptor/save}" class="btn btn-primary me-md-2" type="button">추가</a>
+</div>
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">이름</th>
+        <th scope="col">로봇 ID</th>
+        <th scope="col">작업 조회</th>
+        <th scope="col">삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jobDescriptor: ${jobDescriptors}" th:object="${jobDescriptor}">
+        <td th:text="*{id}"></td>
+        <td><a th:href="@{/jobdescriptor/{id}(id=${jobDescriptor.id})}">[[${jobDescriptor.name}]]</a></td>
+        <td th:text="*{robotId}"></td>
+        <td><a role="button" class="btn btn-secondary btn-sm" th:href="@{/jobs/{id}(id=${jobDescriptor.id})} ">작업 조회</a></td>
+        <td><button type="button" id="btn-delete" class="btn btn-danger btn-sm">삭제</button></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
