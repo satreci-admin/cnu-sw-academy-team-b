@@ -41,17 +41,9 @@ public class JobDescriptorService {
 
     @Transactional
     public Long save(JobDescriptorSaveRequestDto requestDto) {
-        // 로봇과 매핑하고 난 뒤, 사용
-//        RobotEntity robotEntity = robotRepository
-//                .findById(requestDto.getRobotId())
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
-        // 로봇과 매핑하기 전, 임시로 사용
-        RobotEntity robotEntity = RobotEntity.builder()
-                .address("192.168.1.1")
-                .user("anonymous")
-                .password("1234")
-                .build();
-        robotRepository.save(robotEntity);
+        RobotEntity robotEntity = robotRepository
+                .findById(requestDto.getRobotId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
         return jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId();
     }
 
