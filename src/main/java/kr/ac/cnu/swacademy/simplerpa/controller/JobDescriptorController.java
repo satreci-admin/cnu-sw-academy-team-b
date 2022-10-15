@@ -36,6 +36,8 @@ public class JobDescriptorController {
     @GetMapping("/jobdescriptor/{id}")
     public String adminJobDescriptorDetailPage(@PathVariable Long id, Model model) {
         model.addAttribute("jobDescriptor", jobDescriptorService.findById(id));
+        List<RobotListResponseDto> robots = robotService.findAll();
+        model.addAttribute("robots", robots);
         return "jobdescriptor/detail";
     }
 }
