@@ -31,9 +31,9 @@
         <div th:replace="fragments/sidebar :: sidebar"></div>
     </div>
     <div class="container mt-3 " style="width: 800px">
-        <h2>작업명세서[[${jobList.get(0).jobDescriptorEntityId}]]의 작업리스트</h2>
+        <h2>작업명세서[[${jobDescriptorId}]]의 작업리스트</h2>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a th:href="@{/job/save/{id}(id=${jobList.get(0).jobDescriptorEntityId})}" class="btn btn-primary me-md-2" type="button">추가</a>
+            <a th:href="@{/job/save/{id}(id=${jobDescriptorId})}" class="btn btn-primary me-md-2" type="button">추가</a>
         </div>
         <table class="table">
             <thead>
