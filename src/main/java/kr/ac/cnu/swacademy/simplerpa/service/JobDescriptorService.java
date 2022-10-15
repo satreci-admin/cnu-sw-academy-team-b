@@ -51,6 +51,9 @@ public class JobDescriptorService {
     public Long update(Long id, JobDescriptorUpdateRequestDto requestDto) {
         JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
+        RobotEntity robotEntity = robotRepository
+                .findById(requestDto.getRobotId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
 
         String executedDatetime = requestDto.getExecutedDatetime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -58,8 +61,8 @@ public class JobDescriptorService {
 
         jobDescriptorEntity.setName(requestDto.getName());
         jobDescriptorEntity.setExecutedDatetime(executedLocalDatetime);
+        jobDescriptorEntity.setRobotEntity(robotEntity);
         jobDescriptorEntity.setIsRepeat(requestDto.getIsRepeat());
-        jobDescriptorEntity.setUpdateAt(LocalDateTime.now());
         return id;
     }
 
