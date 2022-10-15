@@ -41,17 +41,9 @@ public class JobDescriptorService {
 
     @Transactional
     public Long save(JobDescriptorSaveRequestDto requestDto) {
-        // 로봇과 매핑하고 난 뒤, 사용
-//        RobotEntity robotEntity = robotRepository
-//                .findById(requestDto.getRobotId())
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
-        // 로봇과 매핑하기 전, 임시로 사용
-        RobotEntity robotEntity = RobotEntity.builder()
-                .address("192.168.1.1")
-                .user("anonymous")
-                .password("1234")
-                .build();
-        robotRepository.save(robotEntity);
+        RobotEntity robotEntity = robotRepository
+                .findById(requestDto.getRobotId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
         return jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId();
     }
 
@@ -59,6 +51,9 @@ public class JobDescriptorService {
     public Long update(Long id, JobDescriptorUpdateRequestDto requestDto) {
         JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
+        RobotEntity robotEntity = robotRepository
+                .findById(requestDto.getRobotId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
 
         String executedDatetime = requestDto.getExecutedDatetime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -66,8 +61,8 @@ public class JobDescriptorService {
 
         jobDescriptorEntity.setName(requestDto.getName());
         jobDescriptorEntity.setExecutedDatetime(executedLocalDatetime);
+        jobDescriptorEntity.setRobotEntity(robotEntity);
         jobDescriptorEntity.setIsRepeat(requestDto.getIsRepeat());
-        jobDescriptorEntity.setUpdateAt(LocalDateTime.now());
         return id;
     }
 

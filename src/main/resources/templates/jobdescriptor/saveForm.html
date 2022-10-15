@@ -24,7 +24,7 @@
             <label for="robotId" class="form-label">로봇 ID</label>
             <select id="robotId" class="form-select">
                 <option selected>로봇 ID</option>
-                <option value="1">1</option>
+                <option th:each="robot: ${robots}" th:object="${robot}" th:value="${robot.id}">[[${robot.id}]]</option>
             </select>
         </div>
         <div class="mb-3">

@@ -1,7 +1,9 @@
 package kr.ac.cnu.swacademy.simplerpa.controller;
 
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.service.JobDescriptorService;
+import kr.ac.cnu.swacademy.simplerpa.service.RobotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import java.util.List;
 public class JobDescriptorController {
 
     private final JobDescriptorService jobDescriptorService;
+    private final RobotService robotService;
 
     @GetMapping("/jobdescriptors")
     public String adminJobDescriptorsPage(Model model) {
@@ -24,13 +27,17 @@ public class JobDescriptorController {
     }
 
     @GetMapping("/jobdescriptor/save")
-    public String adminJobDescriptorSavePage() {
+    public String adminJobDescriptorSavePage(Model model) {
+        List<RobotListResponseDto> robots = robotService.findAll();
+        model.addAttribute("robots", robots);
         return "jobdescriptor/saveForm";
     }
 
     @GetMapping("/jobdescriptor/{id}")
     public String adminJobDescriptorDetailPage(@PathVariable Long id, Model model) {
         model.addAttribute("jobDescriptor", jobDescriptorService.findById(id));
+        List<RobotListResponseDto> robots = robotService.findAll();
+        model.addAttribute("robots", robots);
         return "jobdescriptor/detail";
     }
 }
