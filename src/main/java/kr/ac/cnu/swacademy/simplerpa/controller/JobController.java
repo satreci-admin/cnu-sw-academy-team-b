@@ -17,6 +17,7 @@ public class JobController {
     @GetMapping("/jobs/{jobDescriptorId}")
     public String jobList(Model model, @PathVariable Long jobDescriptorId) {
         model.addAttribute("jobList", jobService.findByJobDescriptorEntity(jobDescriptorId));
+        model.addAttribute("jobDescriptorId", jobDescriptorId);
         return "job/jobList";
     }
 
