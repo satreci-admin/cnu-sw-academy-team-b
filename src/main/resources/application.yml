@@ -6,13 +6,14 @@ spring:
     password: 1234
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 100
-        show_sql: true
     database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
