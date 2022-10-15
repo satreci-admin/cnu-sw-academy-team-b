@@ -1,7 +1,9 @@
 package kr.ac.cnu.swacademy.simplerpa.dto;
 
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
+import lombok.Getter;
 
+@Getter
 public class RobotResponseDto {
     private Long id;
     private String address;

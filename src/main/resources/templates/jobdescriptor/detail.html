@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <title>Simple RPA Admin Page</title>
+</head>
+<body class="container-fluid">
+<main>
+    <h2>작업명세서 상세조회</h2>
+    <div class="container" style="width: 400px">
+        <div class="mb-3">
+            <label for="jobDescriptorId" class="form-label">ID</label>
+            <input type="number" class="form-control" id="jobDescriptorId" th:value="${jobDescriptor.id}" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" th:value="${jobDescriptor.name}">
+        </div>
+        <div class="mb-3">
+            <label for="robotId" class="form-label">로봇 ID</label>
+            <select id="robotId" class="form-select">
+                <option th:value="${jobDescriptor.robotId}" selected>[[${jobDescriptor.robotId}]]</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <div class="form-check form-switch">
+                <label class="form-check-label" for="isRepeat">반복 실행 여부</label>
+                <input th:if="${jobDescriptor.isRepeat == false}" class="form-check-input" type="checkbox" id="isRepeat">
+                <input th:if="${jobDescriptor.isRepeat == true}" class="form-check-input" type="checkbox" id="isRepeat" checked>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="executedDateTime" class="form-label">실행될 날짜와 시간</label>
+            <input
+                    id="executedDateTime"
+                    class="form-control"
+                    type="datetime-local"
+                    name="executedDateTime"
+                    th:value="${jobDescriptor.executedDateTime}"/>
+        </div>
+        <div class="mb-3">
+            <label for="createdAt" class="form-label">생성시간</label>
+            <input type="text" class="form-control" id="createdAt" th:value="${jobDescriptor.createdAt}" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="updatedAt" class="form-label">수정시간</label>
+            <input type="text" class="form-control" id="updatedAt" th:value="${jobDescriptor.updatedAt}" disabled>
+        </div>
+
+        <a href="/jobdescriptors" role="button" class="btn btn-secondary">이전</a>
+        <button type="button" id="btn-update" class="btn btn-primary">수정</button>
+        <button type="button" id="btn-delete" class="btn btn-danger">삭제</button>
+    </div>
+    <script type="text/javascript" th:src="@{/js/jobdescriptor/detail.js}"></script>
+</main>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Robot Detail</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+</head>
+<body>
+<h1>Robot Detail</h1>
+<div class="row mb-3">
+    <label for="id" class="col-sm-2 col-form-label">ID</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="id" th:name="${robotId}" th:value="${robotId}" disabled>
+    </div>
+</div>
+<div class="row mb-3">
+    <label for="address" class="col-sm-2 col-form-label">주소(IP:Port)</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="address" th:field="${robot.address}">
+    </div>
+</div>
+<div class="row mb-3">
+    <label for="user" class="col-sm-2 col-form-label">User</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="user" th:field="${robot.user}">
+    </div>
+</div>
+<div class="row mb-3">
+    <label for="password" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="password" th:field="${robot.password}">
+    </div>
+</div>
+<button type="button" class="btn btn-primary" th:onclick="|location.href='@{/robots}'|">이전</button>
+<button type="button" class="btn btn-primary" id="btn-update">수정하기</button>
+<button class="btn btn-primary" id="btn-delete">삭제하기</button>
+<script type="text/javascript" th:src="@{/js/robot.js}"></script>
+</body>
+</html>
