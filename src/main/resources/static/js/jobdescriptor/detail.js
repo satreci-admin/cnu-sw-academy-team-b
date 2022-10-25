@@ -42,7 +42,7 @@ let main = {
 
             $.ajax({
                 type: 'PUT',
-                url: '/jobdescriptor/' + jobDescriptorId,
+                url: '/api/v1/jobdescriptor/' + jobDescriptorId,
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(data)
@@ -59,7 +59,7 @@ let main = {
 
         $.ajax({
             type: 'DELETE',
-            url: '/jobdescriptor/'+ jobDescriptorId,
+            url: '/api/v1/jobdescriptor/'+ jobDescriptorId,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
         }).done(function() {
