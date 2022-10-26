@@ -14,14 +14,14 @@ class SshServiceTest {
     @Test
     void 원격pc에_접속하고_명령어를_실행하고_info_로그를_반환받는다 () {
         // given
-        String[] commands = new String[3];
+        String[] commands = new String[4];
         commands[0] = "touch hello";
         commands[1] = "echo \"hello world\" >> hello ";
         commands[2] = "cp hello hello_world";
-        SshService sshService = new SshService("192.168.64.5:22", "skb", "1234", commands);
+        commands[3] = "ls -al";
 
         // when
-        LogOutputDto outputDto = sshService.start();
+        LogOutputDto outputDto = SshService.start("skb","192.168.64.5:22",  "1234", commands);
 
         // then
         log.info("{} : {} ", outputDto.getLogStatus().toString(), outputDto.getMessage());
@@ -33,10 +33,9 @@ class SshServiceTest {
         // given
         String[] commands = new String[1];
         commands[0] = "rm abcd";
-        SshService sshService = new SshService("192.168.64.5:22", "skb", "1234", commands);
 
         // when
-        LogOutputDto outputDto = sshService.start();
+        LogOutputDto outputDto = SshService.start("skb","192.168.64.5:22",  "1234", commands);
 
         // then
         log.info("{} : {} ", outputDto.getLogStatus().toString(), outputDto.getMessage());
@@ -48,10 +47,9 @@ class SshServiceTest {
         // given
         String[] commands = new String[1];
         commands[0] = "rm abcd";
-        SshService sshService = new SshService("333.333.64.5:22", "12", "1234", commands);
 
         // when
-        LogOutputDto outputDto = sshService.start();
+        LogOutputDto outputDto = SshService.start("skb","192.168.64.5:22",  "1234", commands);
 
         // then
         log.info("{} : {} ", outputDto.getLogStatus().toString(), outputDto.getMessage());
