@@ -1,6 +1,8 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
 import com.jcraft.jsch.*;
+import kr.ac.cnu.swacademy.simplerpa.dto.LogOutputDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.LogStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ public class SshService {
     private Session session;
     private Channel channel;
     private StringBuffer output;
+    private StringBuffer outputLog;
 
     public SshService(String address, String username, String password, String[] commands) {
         this.username = username;
@@ -27,10 +30,15 @@ public class SshService {
         this.commands = commands;
     }
 
-    public void start() throws JSchException, IOException{
-        this.connect();
-        this.sendCommands();
-        log.info("{}", output);
+    public LogOutputDto start() {
+        try {
+            this.connect();
+            this.sendCommands();
+            log.info("{}", output);
+            return this.parseOutput(output);
+        } catch (JSchException | IOException e) {
+            return this.parseOutput(e);
+        }
     }
 
     public void connect()  throws JSchException {
@@ -58,8 +66,6 @@ public class SshService {
 
         channel.connect();
 
-        // output
-        byte[] buffer = new byte[1024];
         // 출력 저장
         String line;
         while((line = br.readLine()) != null) {
@@ -67,5 +73,38 @@ public class SshService {
         }
 
         channel.disconnect();
+    }
+
+    private LogOutputDto parseOutput(StringBuffer output) {
+        // error, fault, err,
+        String[] errorMessage = new String[] {"error", "fault", "err"};
+        boolean error = false;
+
+        for(String message : errorMessage) {
+            if (output.toString().contains(message)) {
+                outputLog.append("[ERROR] : ");
+                outputLog.append(output);
+                outputLog.append("\n");
+                error = true;
+            }
+        }
+        if(error) {
+            return LogOutputDto.builder()
+                    .logStatus(LogStatus.ERROR)
+                    .message(output.toString())
+                    .build();
+        }
+        outputLog.append("[INFO] : Successfully completed!\n");
+        return LogOutputDto.builder()
+                .logStatus(LogStatus.INFO)
+                .message(output.toString())
+                .build();
+    }
+
+    private LogOutputDto parseOutput(Exception e) {
+        return LogOutputDto.builder()
+                .logStatus(LogStatus.ERROR)
+                .message(e.toString())
+                .build();
     }
 }
