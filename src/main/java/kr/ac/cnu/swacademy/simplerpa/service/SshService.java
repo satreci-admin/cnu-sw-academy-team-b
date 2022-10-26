@@ -20,7 +20,6 @@ public class SshService {
     private Session session;
     private Channel channel;
     private StringBuffer output;
-    private StringBuffer outputLog;
 
     public SshService(String address, String username, String password, String[] commands) {
         this.username = username;
@@ -77,7 +76,8 @@ public class SshService {
 
     private LogOutputDto parseOutput(StringBuffer output) {
         // error, fault, err,
-        String[] errorMessage = new String[] {"error", "fault", "err"};
+        StringBuffer outputLog = new StringBuffer();
+        String[] errorMessage = new String[] {"error", "fault", "err", "cannot"};
         boolean error = false;
 
         for(String message : errorMessage) {
@@ -91,13 +91,15 @@ public class SshService {
         if(error) {
             return LogOutputDto.builder()
                     .logStatus(LogStatus.ERROR)
-                    .message(output.toString())
+                    .message(outputLog.toString())
                     .build();
         }
+
         outputLog.append("[INFO] : Successfully completed!\n");
+        outputLog.append(output.toString());
         return LogOutputDto.builder()
                 .logStatus(LogStatus.INFO)
-                .message(output.toString())
+                .message(outputLog.toString())
                 .build();
     }
 
