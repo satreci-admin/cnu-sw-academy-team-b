@@ -9,6 +9,7 @@ import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class JobDescriptorService {
 
     private final JobDescriptorRepository jobDescriptorRepository;
@@ -41,9 +43,14 @@ public class JobDescriptorService {
 
     @Transactional
     public Long save(JobDescriptorSaveRequestDto requestDto) {
-        RobotEntity robotEntity = robotRepository
-                .findById(requestDto.getRobotId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
+        RobotEntity robotEntity;
+        if(Objects.isNull(requestDto.getRobotId())) {
+            robotEntity = null;
+        }else {
+            robotEntity = robotRepository
+                    .findById(requestDto.getRobotId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
+        }
         return jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId();
     }
 

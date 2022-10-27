@@ -23,7 +23,7 @@ public class JobDescriptorResponseDto {
     public JobDescriptorResponseDto(JobDescriptorEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.robotId = entity.getRobotEntity().getId();
+        this.robotId = entity.getRobotEntity() != null ? entity.getRobotEntity().getId() : null;
         this.isRepeat = entity.getIsRepeat();
         this.executedDateTime = entity.getExecutedDatetime();
         this.createdAt = entity.getCreatedAt();
