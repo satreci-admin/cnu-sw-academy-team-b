@@ -1,16 +1,24 @@
 package kr.ac.cnu.swacademy.simplerpa.controller.api;
 
+import kr.ac.cnu.swacademy.simplerpa.dto.JobListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.service.JobService;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 public class JobApiController {
 
     private final JobService jobService;
+
+    @GetMapping("/api/v1/jobs/{jobDescriptorId}")
+    public List<JobListResponseDto> findByJobDescriptorEntity(@PathVariable Long jobDescriptorId) {
+        return jobService.findByJobDescriptorEntity(jobDescriptorId);
+    }
 
     @PostMapping("/job")
     public Long save(@RequestBody JobSaveRequestDto jobSaveRequestDto) {
