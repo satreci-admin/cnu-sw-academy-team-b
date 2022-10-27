@@ -1,21 +1,20 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
-import com.jcraft.jsch.JSchException;
-import kr.ac.cnu.swacademy.simplerpa.dto.*;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorSaveRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
-import kr.ac.cnu.swacademy.simplerpa.run.Ssh;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
