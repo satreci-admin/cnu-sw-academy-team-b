@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,6 +31,13 @@ public class JobDescriptorService {
     public List<JobDescriptorListResponseDto> findAllDesc() {
         return jobDescriptorRepository.findAllDesc().stream()
                 .map(JobDescriptorListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<JobDescriptorResponseDto> findAllByExecutedDatetimeBetween(LocalDateTime startExecutedDatetime, LocalDateTime endExecutedDatetime) {
+        return jobDescriptorRepository.findAllByExecutedDatetimeBetween(startExecutedDatetime, endExecutedDatetime).stream()
+                .map(JobDescriptorResponseDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -72,5 +81,17 @@ public class JobDescriptorService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
         jobDescriptorRepository.delete(jobDescriptorEntity);
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public void execute(Long id) {
+        JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
+
+        String address = jobDescriptorEntity.getRobotEntity().getAddress();
+        String user = jobDescriptorEntity.getRobotEntity().getUser();
+        String password = jobDescriptorEntity.getRobotEntity().getPassword();
+        List<String> commandList = new ArrayList<>();
+        jobDescriptorEntity.getJobEntityList().forEach((jobEntity -> commandList.add(jobEntity.getCommand() + " " + jobEntity.getParameter())));
     }
 }

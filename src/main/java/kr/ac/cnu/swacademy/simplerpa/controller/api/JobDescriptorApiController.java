@@ -46,4 +46,9 @@ public class JobDescriptorApiController {
         Long jobDescriptorId = jobDescriptorService.delete(id);
         return ResponseEntity.ok(jobDescriptorId);
     }
+
+    @GetMapping("/api/v1/exec/jobdescriptor/{id}")
+    public void execute(@PathVariable Long id){
+        jobDescriptorService.execute(id);
+    }
 }
