@@ -12,6 +12,6 @@ public class JobDescriptorListResponseDto {
     public JobDescriptorListResponseDto(JobDescriptorEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.robotId = entity.getRobotEntity().getId();
+        this.robotId = entity.getRobotEntity() != null ? entity.getRobotEntity().getId() : null;
     }
 }
