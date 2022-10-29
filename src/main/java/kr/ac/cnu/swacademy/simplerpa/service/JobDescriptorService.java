@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -90,6 +91,11 @@ public class JobDescriptorService {
     public LogOutputDto execute(Long id) {
         JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
+        Optional.ofNullable(jobDescriptorEntity.getRobotEntity()).orElseThrow(() ->
+                {
+                    throw new IllegalArgumentException("해당 작업명세서에 로봇이 할당되지 않았습니다");
+                }
+        );
 
         String address = jobDescriptorEntity.getRobotEntity().getAddress();
         String username = jobDescriptorEntity.getRobotEntity().getUser();
