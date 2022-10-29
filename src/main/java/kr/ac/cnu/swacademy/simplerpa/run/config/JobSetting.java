@@ -15,7 +15,8 @@ import static org.quartz.JobBuilder.newJob;
 public class JobSetting {
 
     private final Scheduler scheduler;
-    private final String SCHEDULE_EXP = "0 58 23 1/1 * ? *";
+    private final String SCHEDULE_EXP = "00 50 23 1/1 * ? *";
+//    private final String SCHEDULE_EXP = "0 58 23 1/1 * ? *";
 
     @PostConstruct
     public void start(){

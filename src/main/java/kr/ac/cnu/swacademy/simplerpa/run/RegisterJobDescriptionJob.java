@@ -27,8 +27,8 @@ public class RegisterJobDescriptionJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) {
         log.info("RegisterJobDescriptionJob) 오늘 실행될 작업명세서들을 스케줄러에 등록 중..");
-
-        LocalDate tomorrowDate = LocalDate.now().plusDays(1);
+        LocalDate tomorrowDate = LocalDate.now();
+//        LocalDate tomorrowDate = LocalDate.now().plusDays(1);
         LocalDateTime startExecutedDatetime = tomorrowDate.atStartOfDay();
         LocalDateTime endExecutedDatetime = tomorrowDate.atTime(23, 59, 59);
 
