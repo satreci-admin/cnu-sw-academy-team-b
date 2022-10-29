@@ -34,7 +34,7 @@ public class JobDescriptorSaveRequestDto {
     }
 
     public JobDescriptorEntity toEntity(RobotEntity robotEntity) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime executedLocalDatetime = (Objects.isNull(executedDatetime) || Objects.equals(executedDatetime, "")) ? null : LocalDateTime.parse(executedDatetime, formatter);
 
         return JobDescriptorEntity.builder()
