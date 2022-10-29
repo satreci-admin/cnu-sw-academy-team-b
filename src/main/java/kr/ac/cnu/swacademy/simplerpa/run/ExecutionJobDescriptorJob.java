@@ -1,5 +1,6 @@
 package kr.ac.cnu.swacademy.simplerpa.run;
 
+import kr.ac.cnu.swacademy.simplerpa.dto.LogOutputDto;
 import kr.ac.cnu.swacademy.simplerpa.service.JobDescriptorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,8 @@ public class ExecutionJobDescriptorJob extends QuartzJobBean {
         log.info("ExecutionJobDescriptorJob) id={} 작업명세서 실행 시작..", context.getJobDetail().getJobDataMap().get("jobDescriptorId"));
         try {
             Long jobDescriptorId = (Long) context.getJobDetail().getJobDataMap().get("jobDescriptorId");
-            jobDescriptorService.execute(jobDescriptorId);
-//            .forEach((logResponseDto) -> log.info("ExecutionJobDescriptorJob) id={} 작업명세서 실행 완료 결과 : {}", jobDescriptorId, logOutputDto.toString()));
+            LogOutputDto logOutputDto = jobDescriptorService.execute(jobDescriptorId);
+            log.info("ExecutionJobDescriptorJob) id={} 작업명세서 실행 완료 결과 : {}", jobDescriptorId, logOutputDto.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
