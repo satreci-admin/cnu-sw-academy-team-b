@@ -14,5 +14,8 @@ public interface JobDescriptorRepository extends JpaRepository<JobDescriptorEnti
     List<JobDescriptorEntity> findAllDesc();
 
     List<JobDescriptorEntity> findAllByExecutedDatetimeBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT j FROM JobDescriptorEntity j where j.robotEntity.id = :id")
+    List<JobDescriptorEntity> findJobDescriptorEntitiesByRobotEntity(Long id);
 }
 

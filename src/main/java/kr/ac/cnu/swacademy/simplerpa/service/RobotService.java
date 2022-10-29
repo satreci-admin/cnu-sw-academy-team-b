@@ -4,7 +4,9 @@ import kr.ac.cnu.swacademy.simplerpa.dto.RobotListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotUpdateRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
+import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class RobotService {
 
     private final RobotRepository robotRepository;
+    private final JobDescriptorRepository jobDescriptorRepository;
 
     @Transactional
     public Long save(RobotSaveRequestDto requestDto) {
@@ -54,6 +57,14 @@ public class RobotService {
 
     @Transactional
     public Long delete(Long id) {
+        RobotEntity robotEntity = robotRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 로봇이 없습니다"));
+        List<JobDescriptorEntity> entities = jobDescriptorRepository.findJobDescriptorEntitiesByRobotEntity(id);
+        if (entities.size() > 0) {
+            return -1L;
+        }
+
         robotRepository.deleteById(id);
         return id;
     }

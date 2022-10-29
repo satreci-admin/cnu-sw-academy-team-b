@@ -6,6 +6,7 @@ import kr.ac.cnu.swacademy.simplerpa.dto.RobotSaveRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.RobotUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.service.RobotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,10 @@ public class RobotApiController {
 
     @DeleteMapping("/api/v1/robot/{robotId}")
     public ResponseEntity<Long> delete(@PathVariable Long robotId) {
-        robotService.delete(robotId);
+        Long id = robotService.delete(robotId);
+        if(id.equals(-1L)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(robotId);
     }
 }
