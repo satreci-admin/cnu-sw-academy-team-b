@@ -1,9 +1,6 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorSaveRequestDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.*;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
@@ -13,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -91,14 +87,18 @@ public class JobDescriptorService {
     }
 
     @Transactional(readOnly = true)
-    public void execute(Long id) {
+    public LogOutputDto execute(Long id) {
         JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
 
         String address = jobDescriptorEntity.getRobotEntity().getAddress();
-        String user = jobDescriptorEntity.getRobotEntity().getUser();
+        String username = jobDescriptorEntity.getRobotEntity().getUser();
         String password = jobDescriptorEntity.getRobotEntity().getPassword();
+
         List<String> commandList = new ArrayList<>();
         jobDescriptorEntity.getJobEntityList().forEach((jobEntity -> commandList.add(jobEntity.getCommand() + " " + jobEntity.getParameter())));
+        int commandListSize = commandList.size();
+
+        return SshService.start(username, address, password, commandList.toArray(new String[commandListSize]));
     }
 }
