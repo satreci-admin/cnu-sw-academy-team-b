@@ -1,9 +1,6 @@
 package kr.ac.cnu.swacademy.simplerpa.controller.api;
 
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorSaveRequestDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.*;
 import kr.ac.cnu.swacademy.simplerpa.service.JobDescriptorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +45,7 @@ public class JobDescriptorApiController {
     }
 
     @GetMapping("/api/v1/exec/jobdescriptor/{id}")
-    public void execute(@PathVariable Long id){
-        jobDescriptorService.execute(id);
+    public LogOutputDto execute(@PathVariable Long id){
+        return jobDescriptorService.execute(id);
     }
 }
