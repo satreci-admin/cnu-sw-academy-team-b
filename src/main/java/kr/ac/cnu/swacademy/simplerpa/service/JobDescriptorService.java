@@ -68,7 +68,7 @@ public class JobDescriptorService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
 
         String executedDatetime = requestDto.getExecutedDatetime();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime executedLocalDatetime = (Objects.isNull(executedDatetime) || Objects.equals(executedDatetime, "")) ? null : LocalDateTime.parse(executedDatetime, formatter);
 
         jobDescriptorEntity.setName(requestDto.getName());
