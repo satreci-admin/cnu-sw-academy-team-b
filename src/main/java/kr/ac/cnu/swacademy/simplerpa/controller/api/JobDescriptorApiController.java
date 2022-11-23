@@ -23,8 +23,7 @@ public class JobDescriptorApiController {
 
     @GetMapping("/api/v1/jobdescriptor/{id}")
     public ResponseEntity<JobDescriptorResponseDto> findById(@PathVariable Long id) {
-        JobDescriptorResponseDto jobDescriptor = jobDescriptorService.findById(id);
-        return ResponseEntity.ok(jobDescriptor);
+        return ResponseEntity.of(jobDescriptorService.findById(id));
     }
 
     @PostMapping("/api/v1/jobdescriptor")

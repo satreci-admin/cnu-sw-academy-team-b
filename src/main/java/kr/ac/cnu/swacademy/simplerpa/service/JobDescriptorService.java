@@ -41,10 +41,9 @@ public class JobDescriptorService {
     }
 
     @Transactional(readOnly = true)
-    public JobDescriptorResponseDto findById(Long id) {
-        JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
-        return new JobDescriptorResponseDto(jobDescriptorEntity);
+    public Optional<JobDescriptorResponseDto> findById(Long id) {
+        Optional<JobDescriptorEntity> jobDescriptorEntity = jobDescriptorRepository.findById(id);
+        return jobDescriptorEntity.isEmpty() ? Optional.empty() : Optional.of(new JobDescriptorResponseDto(jobDescriptorEntity.get()));
     }
 
     @Transactional
