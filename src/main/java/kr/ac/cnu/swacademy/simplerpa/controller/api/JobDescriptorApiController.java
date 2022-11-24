@@ -35,8 +35,8 @@ public class JobDescriptorApiController {
 
     @PutMapping("/api/v1/jobdescriptor/{id}")
     public ResponseEntity<Long> update(@PathVariable Long id, @RequestBody JobDescriptorUpdateRequestDto requestDto) {
-        Long jobDescriptorId = jobDescriptorService.update(id, requestDto);
-        return ResponseEntity.ok(jobDescriptorId);
+        Optional<Long> jobDescriptorId = jobDescriptorService.update(id, requestDto);
+        return ResponseEntity.of(jobDescriptorId);
     }
 
     @DeleteMapping("/api/v1/jobdescriptor/{id}")

@@ -57,22 +57,27 @@ public class JobDescriptorService {
     }
 
     @Transactional
-    public Long update(Long id, JobDescriptorUpdateRequestDto requestDto) {
-        JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
-        RobotEntity robotEntity = robotRepository
-                .findById(requestDto.getRobotId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
+    public Optional<Long> update(Long id, JobDescriptorUpdateRequestDto requestDto) {
+        Optional<JobDescriptorEntity> gotJobDescriptorEntity = jobDescriptorRepository.findById(id);
+        Optional<RobotEntity> gotRobotEntity = robotRepository.findById(requestDto.getRobotId());
+
+        if(gotJobDescriptorEntity.isEmpty() || gotRobotEntity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        JobDescriptorEntity jobDescriptorEntity = gotJobDescriptorEntity.get();
+        RobotEntity robotEntity = gotRobotEntity.get();
+
+        jobDescriptorEntity.setName(requestDto.getName());
+        jobDescriptorEntity.setRobotEntity(robotEntity);
+        jobDescriptorEntity.setIsRepeat(requestDto.getIsRepeat());
 
         String executedDatetime = requestDto.getExecutedDatetime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime executedLocalDatetime = (Objects.isNull(executedDatetime) || Objects.equals(executedDatetime, "")) ? null : LocalDateTime.parse(executedDatetime, formatter);
-
-        jobDescriptorEntity.setName(requestDto.getName());
         jobDescriptorEntity.setExecutedDatetime(executedLocalDatetime);
-        jobDescriptorEntity.setRobotEntity(robotEntity);
-        jobDescriptorEntity.setIsRepeat(requestDto.getIsRepeat());
-        return id;
+
+        return Optional.of(id);
     }
 
     @Transactional
