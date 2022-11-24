@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,8 +29,8 @@ public class JobDescriptorApiController {
 
     @PostMapping("/api/v1/jobdescriptor")
     public ResponseEntity<Long> save(@RequestBody JobDescriptorSaveRequestDto requestDto) {
-        Long jobDescriptorId = jobDescriptorService.save(requestDto);
-        return ResponseEntity.ok(jobDescriptorId);
+        Optional<Long> jobDescriptorId = jobDescriptorService.save(requestDto);
+        return ResponseEntity.of(jobDescriptorId);
     }
 
     @PutMapping("/api/v1/jobdescriptor/{id}")

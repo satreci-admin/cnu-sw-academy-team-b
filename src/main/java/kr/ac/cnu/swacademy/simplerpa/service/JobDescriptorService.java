@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -47,16 +44,16 @@ public class JobDescriptorService {
     }
 
     @Transactional
-    public Long save(JobDescriptorSaveRequestDto requestDto) {
-        RobotEntity robotEntity;
-        if(Objects.isNull(requestDto.getRobotId())) {
-            robotEntity = null;
-        }else {
-            robotEntity = robotRepository
-                    .findById(requestDto.getRobotId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로봇입니다."));
+    public Optional<Long> save(JobDescriptorSaveRequestDto requestDto) {
+        RobotEntity robotEntity = null;
+        if(Objects.nonNull(requestDto.getRobotId())) {
+            Optional<RobotEntity> gotRobotEntity = robotRepository.findById(requestDto.getRobotId());
+            if(gotRobotEntity.isEmpty()) {
+                return Optional.empty();
+            }
+            robotEntity = gotRobotEntity.get();
         }
-        return jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId();
+        return Optional.of(jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId());
     }
 
     @Transactional
