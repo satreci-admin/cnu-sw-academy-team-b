@@ -61,6 +61,7 @@ class JobDescriptorApiControllerTest {
 
         // When, Then
         mockMvc.perform(get(BASE_URL + "/jobdescriptors"))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0]").exists())
                 .andExpect(jsonPath("$[0].name").value(jobDescriptorEntity1.getName()))
@@ -87,6 +88,7 @@ class JobDescriptorApiControllerTest {
         mockMvc.perform(
                         get(BASE_URL + "/jobdescriptor/" + id))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.isRepeat").value(isRepeat))
                 .andDo(print());
@@ -260,6 +262,7 @@ class JobDescriptorApiControllerTest {
         mockMvc.perform(
                         get(BASE_URL + "/exec/jobdescriptor/" + id))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.logStatus").value(logOutputDto.getLogStatus().toString()))
                 .andExpect(jsonPath("$.message").value(logOutputDto.getMessage()))
                 .andDo(print());
