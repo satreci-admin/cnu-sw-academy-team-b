@@ -180,7 +180,7 @@ class JobDescriptorApiControllerTest {
                         .build();
         String json = new ObjectMapper().writeValueAsString(jobDescriptorUpdateRequestDto);
 
-        given(jobDescriptorService.update(eq(id), any(JobDescriptorUpdateRequestDto.class))).willReturn(id);
+        given(jobDescriptorService.update(eq(id), any(JobDescriptorUpdateRequestDto.class))).willReturn(Optional.of(id));
 
         // When, Then
         mockMvc.perform(put(BASE_URL + "/jobdescriptor/" + id)
@@ -188,6 +188,31 @@ class JobDescriptorApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(id.toString()))
+                .andDo(print());
+
+        verify(jobDescriptorService).update(eq(id), any(JobDescriptorUpdateRequestDto.class));
+    }
+
+    @Test
+    @DisplayName("[API][PUT] 작업명세서 수정 - 존재하지 않는 작업명세서 또는 로봇일 때 404 리턴")
+    void updateInvalidJobDescriptorOrRobotExceptionThrown() throws Exception {
+        // Given
+        Long id = 444L;
+        JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto =
+                JobDescriptorUpdateRequestDto.builder()
+                        .name("수정된 작업명세서444")
+                        .robotId(4L)
+                        .isRepeat(false)
+                        .build();
+        String json = new ObjectMapper().writeValueAsString(jobDescriptorUpdateRequestDto);
+
+        given(jobDescriptorService.update(eq(id), any(JobDescriptorUpdateRequestDto.class))).willReturn(Optional.empty());
+
+        // When, Then
+        mockMvc.perform(put(BASE_URL + "/jobdescriptor/" + id)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         verify(jobDescriptorService).update(eq(id), any(JobDescriptorUpdateRequestDto.class));
