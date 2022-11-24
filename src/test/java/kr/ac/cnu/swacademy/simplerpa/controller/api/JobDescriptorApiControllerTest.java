@@ -1,9 +1,11 @@
 package kr.ac.cnu.swacademy.simplerpa.controller.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorSaveRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.service.JobDescriptorService;
@@ -19,10 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -117,8 +119,8 @@ class JobDescriptorApiControllerTest {
     void save() throws Exception {
         // Given
         Long id = 1L;
-        given(jobDescriptorService.save(any()))
-                .willReturn(id);
+        given(jobDescriptorService.save(any(JobDescriptorSaveRequestDto.class)))
+                .willReturn(Optional.of(id));
 
         String name = "작업명세서1";
         boolean isRepeat = false;
@@ -137,7 +139,33 @@ class JobDescriptorApiControllerTest {
                 .andExpect(content().string(id.toString()))
                 .andDo(print());
 
-        verify(jobDescriptorService).save(any());
+        verify(jobDescriptorService).save(any(JobDescriptorSaveRequestDto.class));
+    }
+
+    @Test
+    @DisplayName("[API][POST] 작업명세서 등록 - 존재하지 않는 로봇을 전달할 때 404 리턴")
+    void saveInvalidRobotExceptionThrown() throws Exception {
+        // Given
+        given(jobDescriptorService.save(any(JobDescriptorSaveRequestDto.class)))
+                .willReturn(Optional.empty());
+
+        String name = "작업명세서1";
+        boolean isRepeat = false;
+        JobDescriptorSaveRequestDto jobDescriptorSaveRequestDto = JobDescriptorSaveRequestDto.builder()
+                .name(name)
+                .isRepeat(isRepeat)
+                .build();
+        String json = new ObjectMapper().writeValueAsString(jobDescriptorSaveRequestDto);
+
+        // When, Then
+        mockMvc.perform(
+                        post(BASE_URL + "/jobdescriptor")
+                                .content(json)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+
+        verify(jobDescriptorService).save(any(JobDescriptorSaveRequestDto.class));
     }
 
     @Test
