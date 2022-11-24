@@ -1,6 +1,5 @@
 package kr.ac.cnu.swacademy.simplerpa.controller.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
@@ -39,7 +38,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][GET] 작업명세서 리스트 조회")
-    void findAllDesc() throws Exception {
+    void findAllDescTest() throws Exception {
         RobotEntity robotEntity = RobotEntity.builder()
                 .address("127.0.0.1:22")
                 .user("anonymous")
@@ -78,7 +77,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][GET] 작업명세서 상세 조회")
-    void findById() throws Exception {
+    void findByIdTest() throws Exception {
         // Given
         Long id = 1L;
         String name = "작업명세서1";
@@ -100,7 +99,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][GET] 작업명세서 상세 조회 - 존재하지 않을 때 404 리턴")
-    void findByIdInvalidIdExceptionThrown() throws Exception {
+    void findByIdInvalidIdExceptionThrownTest() throws Exception {
         // Given
         Long id = 142L;
         given(jobDescriptorService.findById(id)).willReturn(Optional.empty());
@@ -116,7 +115,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][POST] 작업명세서 등록")
-    void save() throws Exception {
+    void saveTest() throws Exception {
         // Given
         Long id = 1L;
         given(jobDescriptorService.save(any(JobDescriptorSaveRequestDto.class)))
@@ -144,7 +143,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][POST] 작업명세서 등록 - 존재하지 않는 로봇을 전달할 때 404 리턴")
-    void saveInvalidRobotExceptionThrown() throws Exception {
+    void saveInvalidRobotExceptionThrownTest() throws Exception {
         // Given
         given(jobDescriptorService.save(any(JobDescriptorSaveRequestDto.class)))
                 .willReturn(Optional.empty());
@@ -170,7 +169,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][PUT] 작업명세서 수정")
-    void update() throws Exception {
+    void updateTest() throws Exception {
         // Given
         Long id = 1L;
         JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto =
@@ -184,8 +183,8 @@ class JobDescriptorApiControllerTest {
 
         // When, Then
         mockMvc.perform(put(BASE_URL + "/jobdescriptor/" + id)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(id.toString()))
                 .andDo(print());
@@ -195,7 +194,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][PUT] 작업명세서 수정 - 존재하지 않는 작업명세서 또는 로봇일 때 404 리턴")
-    void updateInvalidJobDescriptorOrRobotExceptionThrown() throws Exception {
+    void updateInvalidJobDescriptorOrRobotExceptionThrownTest() throws Exception {
         // Given
         Long id = 444L;
         JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto =
@@ -219,7 +218,34 @@ class JobDescriptorApiControllerTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("[API][DELETE] 작업명세서 삭제")
+    void deleteTest() throws Exception {
+        // Given
+        Long id = 1L;
+        given(jobDescriptorService.delete(id)).willReturn(Optional.of(id));
+
+        // When, Then
+        mockMvc.perform(delete(BASE_URL + "/jobdescriptor/" + id))
+                .andExpect(status().isOk())
+                .andExpect(content().string(id.toString()))
+                .andDo(print());
+
+        verify(jobDescriptorService).delete(id);
+    }
+
+    @Test
+    @DisplayName("[API][DELETE] 작업명세서 삭제 - 존재하지 않는 작업명세서일 때 404 리턴")
+    void deleteInvalidJobDescriptorExceptionThrownTest() throws Exception {
+        // Given
+        Long id = 444L;
+        given(jobDescriptorService.delete(id)).willReturn(Optional.empty());
+
+        // When, Then
+        mockMvc.perform(delete(BASE_URL + "/jobdescriptor/" + id))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+
+        verify(jobDescriptorService).delete(id);
     }
 
     @Test
