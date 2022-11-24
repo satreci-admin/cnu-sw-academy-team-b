@@ -81,11 +81,13 @@ public class JobDescriptorService {
     }
 
     @Transactional
-    public Long delete(Long id) {
-        JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
-        jobDescriptorRepository.delete(jobDescriptorEntity);
-        return id;
+    public Optional<Long> delete(Long id) {
+        Optional<JobDescriptorEntity> jobDescriptorEntity = jobDescriptorRepository.findById(id);
+        if(jobDescriptorEntity.isEmpty()) {
+            return Optional.empty();
+        }
+        jobDescriptorRepository.delete(jobDescriptorEntity.get());
+        return Optional.of(id);
     }
 
     @Transactional(readOnly = true)

@@ -41,8 +41,8 @@ public class JobDescriptorApiController {
 
     @DeleteMapping("/api/v1/jobdescriptor/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        Long jobDescriptorId = jobDescriptorService.delete(id);
-        return ResponseEntity.ok(jobDescriptorId);
+        Optional<Long> jobDescriptorId = jobDescriptorService.delete(id);
+        return ResponseEntity.of(jobDescriptorId);
     }
 
     @GetMapping("/api/v1/exec/jobdescriptor/{id}")
