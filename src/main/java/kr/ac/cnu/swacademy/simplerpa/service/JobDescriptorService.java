@@ -91,23 +91,21 @@ public class JobDescriptorService {
     }
 
     @Transactional(readOnly = true)
-    public LogOutputDto execute(Long id) {
-        JobDescriptorEntity jobDescriptorEntity = jobDescriptorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 작업명세서가 존재하지않습니다. id=" + id));
-        Optional.ofNullable(jobDescriptorEntity.getRobotEntity()).orElseThrow(() ->
-                {
-                    throw new IllegalArgumentException("해당 작업명세서에 로봇이 할당되지 않았습니다");
-                }
-        );
+    public Optional<LogOutputDto> execute(Long id) {
+        Optional<JobDescriptorEntity> gotJobDescriptorEntity = jobDescriptorRepository.findById(id);
+        if(gotJobDescriptorEntity.isEmpty()) return Optional.empty();
+        JobDescriptorEntity jobDescriptorEntity = gotJobDescriptorEntity.get();
 
-        String address = jobDescriptorEntity.getRobotEntity().getAddress();
-        String username = jobDescriptorEntity.getRobotEntity().getUser();
-        String password = jobDescriptorEntity.getRobotEntity().getPassword();
+        RobotEntity robotEntity = jobDescriptorEntity.getRobotEntity();
+        if(Objects.isNull(robotEntity)) return Optional.empty();
+        String address = robotEntity.getAddress();
+        String username = robotEntity.getUser();
+        String password = robotEntity.getPassword();
 
         List<String> commandList = new ArrayList<>();
         jobDescriptorEntity.getJobEntityList().forEach((jobEntity -> commandList.add(jobEntity.getCommand() + " " + jobEntity.getParameter())));
         int commandListSize = commandList.size();
 
-        return SshService.start(username, address, password, commandList.toArray(new String[commandListSize]));
+        return Optional.of(SshService.start(username, address, password, commandList.toArray(new String[commandListSize])));
     }
 }
