@@ -1,10 +1,7 @@
 package kr.ac.cnu.swacademy.simplerpa.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorSaveRequestDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.*;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.service.JobDescriptorService;
@@ -249,6 +246,40 @@ class JobDescriptorApiControllerTest {
     }
 
     @Test
-    void execute() {
+    @DisplayName("작업명세서 실행 - 완료")
+    void executeTest() throws Exception {
+        // Given
+        Long id = 1L;
+        LogOutputDto logOutputDto = LogOutputDto.builder()
+                .logStatus(LogStatus.INFO)
+                .message("[INFO] : Successfully completed!")
+                .build();
+        given(jobDescriptorService.execute(id)).willReturn(Optional.of(logOutputDto));
+
+        // When, Then
+        mockMvc.perform(
+                        get(BASE_URL + "/exec/jobdescriptor/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.logStatus").value(logOutputDto.getLogStatus().toString()))
+                .andExpect(jsonPath("$.message").value(logOutputDto.getMessage()))
+                .andDo(print());
+
+        verify(jobDescriptorService).execute(id);
+    }
+
+    @Test
+    @DisplayName("작업명세서 실행 - 작업명세서가 존재하지 않거나 로봇을 지정하지 않아 실패")
+    void executeInvalidJobDescriptorOrEmptyRobotTest() throws Exception {
+        // Given
+        Long id = 444L;
+        given(jobDescriptorService.execute(id)).willReturn(Optional.empty());
+
+        // When, Then
+        mockMvc.perform(
+                        get(BASE_URL + "/exec/jobdescriptor/" + id))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+
+        verify(jobDescriptorService).execute(id);
     }
 }
