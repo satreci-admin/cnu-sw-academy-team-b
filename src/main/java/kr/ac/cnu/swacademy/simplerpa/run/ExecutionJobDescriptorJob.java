@@ -22,7 +22,7 @@ public class ExecutionJobDescriptorJob extends QuartzJobBean {
         log.info("ExecutionJobDescriptorJob) id={} 작업명세서 실행 시작..", context.getJobDetail().getJobDataMap().get("jobDescriptorId"));
         try {
             Long jobDescriptorId = (Long) context.getJobDetail().getJobDataMap().get("jobDescriptorId");
-            LogOutputDto logOutputDto = jobDescriptorService.execute(jobDescriptorId);
+            LogOutputDto logOutputDto = jobDescriptorService.execute(jobDescriptorId).get(); // 예외처리할 예정
             log.info("ExecutionJobDescriptorJob) id={} 작업명세서 실행 완료 결과 : {}", jobDescriptorId, logOutputDto.toString());
         } catch (Exception e) {
             e.printStackTrace();
