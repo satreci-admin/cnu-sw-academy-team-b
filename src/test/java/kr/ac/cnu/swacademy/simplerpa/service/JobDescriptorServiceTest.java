@@ -1,5 +1,6 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,8 +33,28 @@ class JobDescriptorServiceTest {
     JobDescriptorService jobDescriptorService;
 
     @Test
+    @DisplayName("작업명세서 리스트 조회")
     void findAllDescTest() {
+        // Given
+        JobDescriptorEntity jobDescriptorEntity1 = JobDescriptorEntity.builder()
+                .name("작업명세서1")
+                .isRepeat(false)
+                .build();
+        JobDescriptorEntity jobDescriptorEntity2 = JobDescriptorEntity.builder()
+                .name("작업명세서2")
+                .isRepeat(false)
+                .build();
+        given(jobDescriptorRepository.findAllDesc()).willReturn(List.of(jobDescriptorEntity1, jobDescriptorEntity2));
 
+        // When
+        List<JobDescriptorListResponseDto> jobDescriptorListResponseDtos = jobDescriptorService.findAllDesc();
+
+        // Then
+        then(jobDescriptorRepository).should().findAllDesc();
+
+        assertThat(jobDescriptorListResponseDtos).hasSize(2);
+        assertThat(jobDescriptorListResponseDtos.get(0)).usingRecursiveComparison().isEqualTo(new JobDescriptorListResponseDto(jobDescriptorEntity1));
+        assertThat(jobDescriptorListResponseDtos.get(1)).usingRecursiveComparison().isEqualTo(new JobDescriptorListResponseDto(jobDescriptorEntity2));
     }
 
     @Test
