@@ -98,7 +98,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][GET] 작업명세서 상세 조회 - 존재하지 않을 때 404 리턴")
-    void findByIdInvalidIdExceptionThrownTest() throws Exception {
+    void findById_InvalidId_ReturnNotFoundTest() throws Exception {
         // Given
         Long id = 142L;
         given(jobDescriptorService.findById(id)).willReturn(Optional.empty());
@@ -142,7 +142,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][POST] 작업명세서 등록 - 존재하지 않는 로봇을 전달할 때 404 리턴")
-    void saveInvalidRobotExceptionThrownTest() throws Exception {
+    void save_InvalidRobot_ReturnNotFoundTest() throws Exception {
         // Given
         given(jobDescriptorService.save(any(JobDescriptorSaveRequestDto.class)))
                 .willReturn(Optional.empty());
@@ -193,7 +193,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][PUT] 작업명세서 수정 - 존재하지 않는 작업명세서 또는 로봇일 때 404 리턴")
-    void updateInvalidJobDescriptorOrRobotExceptionThrownTest() throws Exception {
+    void update_InvalidJobDescriptorOrRobot_ReturnNotFoundTest() throws Exception {
         // Given
         Long id = 444L;
         JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto =
@@ -234,7 +234,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("[API][DELETE] 작업명세서 삭제 - 존재하지 않는 작업명세서일 때 404 리턴")
-    void deleteInvalidJobDescriptorExceptionThrownTest() throws Exception {
+    void delete_InvalidJobDescriptor_ReturnNotFoundTest() throws Exception {
         // Given
         Long id = 444L;
         given(jobDescriptorService.delete(id)).willReturn(Optional.empty());
@@ -272,7 +272,7 @@ class JobDescriptorApiControllerTest {
 
     @Test
     @DisplayName("작업명세서 실행 - 작업명세서가 존재하지 않거나 로봇을 지정하지 않아 실패")
-    void executeInvalidJobDescriptorOrEmptyRobotTest() throws Exception {
+    void execute_InvalidJobDescriptorOrEmptyRobot_ReturnNotFoundTest() throws Exception {
         // Given
         Long id = 444L;
         given(jobDescriptorService.execute(id)).willReturn(Optional.empty());
