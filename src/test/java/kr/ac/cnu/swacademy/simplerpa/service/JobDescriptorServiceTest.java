@@ -14,10 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -59,6 +61,32 @@ class JobDescriptorServiceTest {
         assertThat(jobDescriptorListResponseDtos.get(1)).usingRecursiveComparison().isEqualTo(new JobDescriptorListResponseDto(jobDescriptorEntity2));
     }
 
+    @Test
+    @DisplayName("두 일시 사이에 실행되는 작업명세서들 조회")
+    void findAllByExecutedDatetimeBetweenTest() {
+        // Given
+        JobDescriptorEntity jobDescriptorEntity1 = JobDescriptorEntity.builder()
+                .name("작업명세서1")
+                .isRepeat(false)
+                .executedDatetime(LocalDateTime.now())
+                .build();
+        JobDescriptorEntity jobDescriptorEntity2 = JobDescriptorEntity.builder()
+                .name("작업명세서2")
+                .isRepeat(false)
+                .executedDatetime(LocalDateTime.now())
+                .build();
+        given(jobDescriptorRepository.findAllByExecutedDatetimeBetween(any(LocalDateTime.class), any(LocalDateTime.class))).willReturn(List.of(jobDescriptorEntity1, jobDescriptorEntity2));
+
+        // When
+        List<JobDescriptorResponseDto> jobDescriptorResponseDtos = jobDescriptorService.findAllByExecutedDatetimeBetween(LocalDateTime.now(), LocalDateTime.now());
+
+        // Then
+        then(jobDescriptorRepository).should().findAllByExecutedDatetimeBetween(any(LocalDateTime.class), any(LocalDateTime.class));
+
+        assertThat(jobDescriptorResponseDtos).hasSize(2);
+        assertThat(jobDescriptorResponseDtos.get(0)).usingRecursiveComparison().isEqualTo(new JobDescriptorResponseDto(jobDescriptorEntity1));
+        assertThat(jobDescriptorResponseDtos.get(1)).usingRecursiveComparison().isEqualTo(new JobDescriptorResponseDto(jobDescriptorEntity2));
+    }
 
     @Test
     @DisplayName("작업명세서 상세 조회")
