@@ -2,7 +2,9 @@ package kr.ac.cnu.swacademy.simplerpa.service;
 
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
 import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
+import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -57,9 +59,6 @@ class JobDescriptorServiceTest {
         assertThat(jobDescriptorListResponseDtos.get(1)).usingRecursiveComparison().isEqualTo(new JobDescriptorListResponseDto(jobDescriptorEntity2));
     }
 
-    @Test
-    void findAllByExecutedDatetimeBetweenTest() {
-    }
 
     @Test
     @DisplayName("작업명세서 상세 조회")
@@ -98,11 +97,108 @@ class JobDescriptorServiceTest {
     }
 
     @Test
-    void saveTest() {
+    @DisplayName("작업명세서 수정")
+    void updateTest() {
+        // Given
+        RobotEntity robotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1:22")
+                .user("anonymous")
+                .password("1234")
+                .build();
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
+                .name("작업명세서")
+                .isRepeat(false)
+                .robotEntity(robotEntity1)
+                .build();
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.of(jobDescriptorEntity));
+
+        JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto = JobDescriptorUpdateRequestDto.builder()
+                .name("수정된 작업명세서1")
+                .robotId(2L)
+                .isRepeat(false)
+                .build();
+        RobotEntity robotEntity2 = RobotEntity.builder()
+                .address("168.192.0.1:22")
+                .user("anonymous")
+                .password("1234")
+                .build();
+        given(robotRepository.findById(anyLong())).willReturn(Optional.of(robotEntity2));
+
+        long jobDescriptorId = 1L;
+        // When
+        Optional<Long> gotJobDescriptorId = jobDescriptorService.update(jobDescriptorId, jobDescriptorUpdateRequestDto);
+
+        // Then
+        then(jobDescriptorRepository).should().findById(anyLong());
+        then(robotRepository).should().findById(anyLong());
+
+        assertThat(gotJobDescriptorId).isPresent();
+        assertThat(gotJobDescriptorId.get()).isEqualTo(jobDescriptorId);
     }
 
     @Test
-    void updateTest() {
+    @DisplayName("작업명세서 수정 - 작업명세서가 존재하지 않을 때")
+    void update_InvalidJobDescriptor_ReturnEmptyOptional_Test() {
+        // Given
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto = JobDescriptorUpdateRequestDto.builder()
+                .name("수정된 작업명세서444")
+                .robotId(1L)
+                .isRepeat(false)
+                .build();
+        RobotEntity robotEntity = RobotEntity.builder()
+                .address("127.0.0.1:22")
+                .user("anonymous")
+                .password("1234")
+                .build();
+        given(robotRepository.findById(anyLong())).willReturn(Optional.of(robotEntity));
+
+        long jobDescriptorId = 444L;
+
+        // When
+        Optional<Long> gotJobDescriptorId = jobDescriptorService.update(jobDescriptorId, jobDescriptorUpdateRequestDto);
+
+        // Then
+        then(jobDescriptorRepository).should().findById(anyLong());
+        then(robotRepository).should().findById(anyLong());
+
+        assertThat(gotJobDescriptorId).isEmpty();
+    }
+
+    @Test
+    @DisplayName("작업명세서 수정 - 로봇이 존재하지 않을 때")
+    void update_InvalidRobot_ReturnEmptyOptional_Test() {
+        // Given
+        RobotEntity robotEntity1 = RobotEntity.builder()
+                .address("127.0.0.1:22")
+                .user("anonymous")
+                .password("1234")
+                .build();
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
+                .name("작업명세서")
+                .isRepeat(false)
+                .robotEntity(robotEntity1)
+                .build();
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.of(jobDescriptorEntity));
+
+        JobDescriptorUpdateRequestDto jobDescriptorUpdateRequestDto = JobDescriptorUpdateRequestDto.builder()
+                .name("수정된 작업명세서1")
+                .robotId(444L)
+                .isRepeat(false)
+                .build();
+        given(robotRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        long jobDescriptorId = 1L;
+
+        // When
+        Optional<Long> gotJobDescriptorId = jobDescriptorService.update(jobDescriptorId, jobDescriptorUpdateRequestDto);
+
+        // Then
+        then(jobDescriptorRepository).should().findById(anyLong());
+        then(robotRepository).should().findById(anyLong());
+
+        assertThat(gotJobDescriptorId).isEmpty();
     }
 
     @Test
