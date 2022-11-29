@@ -230,7 +230,40 @@ class JobDescriptorServiceTest {
     }
 
     @Test
+    @DisplayName("작업명세서 삭제")
     void deleteTest() {
+        // Given
+        Long id = 1L;
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
+                .name("작업명세서")
+                .isRepeat(false)
+                .build();
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.of(jobDescriptorEntity));
+
+        // When
+        Optional<Long> jobDescriptorId = jobDescriptorService.delete(id);
+
+        // Then
+        then(jobDescriptorRepository).should().findById(anyLong());
+
+        assertThat(jobDescriptorId).isPresent();
+        assertThat(jobDescriptorId.get()).isEqualTo(id);
+    }
+
+    @Test
+    @DisplayName("작업명세서 삭제 - 존재하지 않을 때")
+    void delete_InvalidId_ReturnEmptyOptionalTest() {
+        // Given
+        Long id = 1L;
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // When
+        Optional<Long> jobDescriptorId = jobDescriptorService.delete(id);
+
+        // Then
+        then(jobDescriptorRepository).should().findById(anyLong());
+
+        assertThat(jobDescriptorId).isEmpty();
     }
 
     @Test
