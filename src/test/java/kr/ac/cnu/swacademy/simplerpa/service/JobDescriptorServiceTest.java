@@ -1,17 +1,19 @@
 package kr.ac.cnu.swacademy.simplerpa.service;
 
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorListResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorResponseDto;
-import kr.ac.cnu.swacademy.simplerpa.dto.JobDescriptorUpdateRequestDto;
+import kr.ac.cnu.swacademy.simplerpa.dto.*;
 import kr.ac.cnu.swacademy.simplerpa.entity.JobDescriptorEntity;
+import kr.ac.cnu.swacademy.simplerpa.entity.JobEntity;
 import kr.ac.cnu.swacademy.simplerpa.entity.RobotEntity;
 import kr.ac.cnu.swacademy.simplerpa.repository.JobDescriptorRepository;
 import kr.ac.cnu.swacademy.simplerpa.repository.RobotRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -19,22 +21,32 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mockStatic;
 
 
 @ExtendWith(MockitoExtension.class)
 class JobDescriptorServiceTest {
 
+    private static MockedStatic<SshService> sshService;
     @Mock
     JobDescriptorRepository jobDescriptorRepository;
     @Mock
     RobotRepository robotRepository;
-
     @InjectMocks
     JobDescriptorService jobDescriptorService;
+
+    @BeforeAll
+    public static void beforeAll() {
+        sshService = mockStatic(SshService.class);
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        sshService.close();
+    }
 
     @Test
     @DisplayName("작업명세서 리스트 조회")
@@ -267,6 +279,77 @@ class JobDescriptorServiceTest {
     }
 
     @Test
+    @DisplayName("작업명세서 실행")
     void executeTest() {
+        // Given
+        Long id = 1L;
+        RobotEntity robotEntity = RobotEntity.builder()
+                .address("127.0.0.1:22")
+                .user("anonymous")
+                .password("1234")
+                .build();
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
+                .name("작업명세서")
+                .isRepeat(false)
+                .robotEntity(robotEntity)
+                .build();
+        JobEntity jobEntity = JobEntity.builder()
+                .command("ls")
+                .parameter("-al")
+                .activation(true)
+                .build();
+        jobDescriptorEntity.addJobEntity(jobEntity);
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.of(jobDescriptorEntity));
+
+        LogOutputDto logOutputDto = LogOutputDto.builder()
+                .logStatus(LogStatus.INFO)
+                .message("[INFO] : Successfully completed!\n출력된 파일 목록")
+                .build();
+        given(SshService.start(anyString(), anyString(), anyString(), any(String[].class))).willReturn(logOutputDto);
+
+        // When
+        Optional<LogOutputDto> gotLogOutputDto = jobDescriptorService.execute(id);
+
+        // Then
+        assertThat(gotLogOutputDto).isPresent();
+        assertThat(gotLogOutputDto.get()).usingRecursiveComparison().isEqualTo(logOutputDto);
+    }
+
+    @Test
+    @DisplayName("작업명세서 실행 - 작업명세서가 존재하지 않을 때")
+    void execute_InvalidJobdescriptor_ReturnEmptyOptionalTest() {
+        // Given
+        Long id = 1L;
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // When
+        Optional<LogOutputDto> gotLogOutputDto = jobDescriptorService.execute(id);
+
+        // Then
+        assertThat(gotLogOutputDto).isEmpty();
+    }
+
+    @Test
+    @DisplayName("작업명세서 실행 - 로봇이 존재하지 않을 때")
+    void execute_NotExistRobot_ReturnEmptyOptionalTest() {
+        // Given
+        Long id = 1L;
+        JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
+                .name("작업명세서")
+                .isRepeat(false)
+                .build();
+        JobEntity jobEntity = JobEntity.builder()
+                .command("ls")
+                .parameter("-al")
+                .activation(true)
+                .build();
+        jobDescriptorEntity.addJobEntity(jobEntity);
+        given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.of(jobDescriptorEntity));
+
+        // When
+        Optional<LogOutputDto> gotLogOutputDto = jobDescriptorService.execute(id);
+
+        // Then
+        assertThat(gotLogOutputDto).isEmpty();
     }
 }
