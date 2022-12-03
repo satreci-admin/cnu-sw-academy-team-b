@@ -123,7 +123,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 상세 조회 - 존재하지 않을 때")
-    void findById_InvalidId_ReturnEmptyOptionalTest() {
+    void findByIdInvalidIdReturnEmptyOptionalTest() {
         // Given
         given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
 
@@ -178,7 +178,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 수정 - 작업명세서가 존재하지 않을 때")
-    void update_InvalidJobDescriptor_ReturnEmptyOptional_Test() {
+    void updateInvalidJobDescriptorReturnEmptyOptionalTest() {
         // Given
         given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
 
@@ -208,7 +208,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 수정 - 로봇이 존재하지 않을 때")
-    void update_InvalidRobot_ReturnEmptyOptional_Test() {
+    void updateInvalidRobotReturnEmptyOptionalTest() {
         // Given
         RobotEntity robotEntity1 = RobotEntity.builder()
                 .address("127.0.0.1:22")
@@ -264,7 +264,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 삭제 - 존재하지 않을 때")
-    void delete_InvalidId_ReturnEmptyOptionalTest() {
+    void deleteInvalidIdReturnEmptyOptionalTest() {
         // Given
         Long id = 1L;
         given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
@@ -317,7 +317,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 실행 - 작업명세서가 존재하지 않을 때")
-    void execute_InvalidJobdescriptor_ReturnEmptyOptionalTest() {
+    void executeInvalidJobdescriptorReturnEmptyOptionalTest() {
         // Given
         Long id = 1L;
         given(jobDescriptorRepository.findById(anyLong())).willReturn(Optional.empty());
@@ -331,7 +331,7 @@ class JobDescriptorServiceTest {
 
     @Test
     @DisplayName("작업명세서 실행 - 로봇이 존재하지 않을 때")
-    void execute_NotExistRobot_ReturnEmptyOptionalTest() {
+    void executeNotExistRobotReturnEmptyOptionalTest() {
         // Given
         Long id = 1L;
         JobDescriptorEntity jobDescriptorEntity = JobDescriptorEntity.builder()
