@@ -53,7 +53,7 @@ public class JobDescriptorService {
             }
             robotEntity = gotRobotEntity.get();
         }
-        return Optional.of(jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId());
+        return Optional.ofNullable(jobDescriptorRepository.save(requestDto.toEntity(robotEntity)).getId());
     }
 
     @Transactional
